@@ -2,8 +2,9 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/spf13/cobra"
 	"os"
+
+	"github.com/spf13/cobra"
 
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/viper"
@@ -40,6 +41,8 @@ func init() {
 	// will be global for your application.
 
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.fpl.yaml)")
+	rootCmd.PersistentFlags().StringP("gameweek", "g", "", "The gameweek you wish to see the fixtures for")
+	viper.BindPFlag("gameweek", rootCmd.PersistentFlags().Lookup("gameweek"))
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.

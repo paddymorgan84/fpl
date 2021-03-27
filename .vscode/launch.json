@@ -10,7 +10,7 @@
       "request": "launch",
       "mode": "auto",
       "program": "${workspaceFolder}/main.go",
-      "args": ["fixtures", "28"]
+      "args": ["points", "-g", "1"]
     }
   ]
 }

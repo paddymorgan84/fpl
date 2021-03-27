@@ -2,7 +2,7 @@ package responses
 
 import "time"
 
-type FixturesResponse struct {
+type FixturesResponse []struct {
 	Code                 int       `json:"code"`
 	Event                int       `json:"event"`
 	Finished             bool      `json:"finished"`
