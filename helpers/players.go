@@ -29,6 +29,10 @@ func GetPlayerName(pick responses.Pick, bootstrap responses.BootstrapResponse) s
 func GetPoints(pick responses.Pick, live responses.LiveResponse) int {
 	for _, player := range live.Players {
 		if pick.Element == player.ID {
+			if pick.Multiplier == 0 {
+				return player.Stats.TotalPoints
+			}
+
 			return player.Stats.TotalPoints * pick.Multiplier
 		}
 	}
