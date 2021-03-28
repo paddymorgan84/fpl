@@ -2,6 +2,7 @@ package responses
 
 import "time"
 
+// BootstrapResponse is the response returned when you request bootstrap data from the fpl API
 type BootstrapResponse struct {
 	Gameweeks    []Gameweek   `json:"events"`
 	GameSettings GameSettings `json:"game_settings"`
@@ -13,6 +14,7 @@ type BootstrapResponse struct {
 	PlayerTypes  []PlayerType `json:"element_types"`
 }
 
+// Gameweek contains details around the gameweek
 type Gameweek struct {
 	ID                     int           `json:"id"`
 	Name                   string        `json:"name"`
@@ -37,16 +39,19 @@ type Gameweek struct {
 	MostViceCaptained      int           `json:"most_vice_captained"`
 }
 
+// ChipPlay contains details around a chip that has been played
 type ChipPlay struct {
 	ChipName  string `json:"chip_name"`
 	NumPlayed int    `json:"num_played"`
 }
 
+// TopPlayerInfo contains details around the top performing player
 type TopPlayerInfo struct {
 	ID     int `json:"id"`
 	Points int `json:"points"`
 }
 
+// GameSettings contains details around the settings for the fpl game itself
 type GameSettings struct {
 	LeagueJoinPrivateMax         int           `json:"league_join_private_max"`
 	LeagueJoinPublicMax          int           `json:"league_join_public_max"`
@@ -78,6 +83,7 @@ type GameSettings struct {
 	Timezone                     string        `json:"timezone"`
 }
 
+// Phase represents a phase in time
 type Phase struct {
 	ID         int    `json:"id"`
 	Name       string `json:"name"`
@@ -85,6 +91,7 @@ type Phase struct {
 	StopEvent  int    `json:"stop_event"`
 }
 
+// Team contains details around a specific fpl team
 type Team struct {
 	Code                int         `json:"code"`
 	Draw                int         `json:"draw"`
@@ -109,6 +116,7 @@ type Team struct {
 	PulseID             int         `json:"pulse_id"`
 }
 
+// Player contains details around a specific player
 type Player struct {
 	ChanceOfPlayingNextRound         int         `json:"chance_of_playing_next_round"`
 	ChanceOfPlayingThisRound         int         `json:"chance_of_playing_this_round"`
@@ -179,11 +187,13 @@ type Player struct {
 	PenaltiesText                    string      `json:"penalties_text"`
 }
 
+// PlayerStat contains a specific stat for a player
 type PlayerStat struct {
 	Label string `json:"label"`
 	Name  string `json:"name"`
 }
 
+// PlayerType contains details around the player type
 type PlayerType struct {
 	ID                 int    `json:"id"`
 	PluralName         string `json:"plural_name"`

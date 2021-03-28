@@ -1,15 +1,18 @@
 package responses
 
+// LiveResponse is the response returned by the FPL API when the live endpoint is used
 type LiveResponse struct {
 	Players []PlayerLive `json:"elements"`
 }
 
+// PlayerLive contains the details of a player for that live gameweek
 type PlayerLive struct {
 	ID      int           `json:"id"`
 	Stats   Stats         `json:"stats"`
 	Explain []ExplainStat `json:"explain"`
 }
 
+// Stats represents a list of possible statistics for a player in the live gameweek
 type Stats struct {
 	Minutes         int    `json:"minutes"`
 	GoalsScored     int    `json:"goals_scored"`
@@ -32,11 +35,13 @@ type Stats struct {
 	InDreamteam     bool   `json:"in_dreamteam"`
 }
 
+// ExplainStat gives a more detailed look at a specific stat for a specific fixture
 type ExplainStat struct {
 	Fixture int               `json:"fixture"`
 	Stats   []ExplainStatStat `json:"stats"`
 }
 
+// ExplainStatStat holds details around the stat, including the value and how many points that attributes to
 type ExplainStatStat struct {
 	Identifier string `json:"identifier"`
 	Points     int    `json:"points"`

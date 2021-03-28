@@ -15,6 +15,7 @@ import (
 	"github.com/spf13/viper"
 )
 
+// PointsArgs are the arguments you can pass to the points command
 type PointsArgs struct {
 	TeamID string
 }
@@ -72,16 +73,6 @@ var pointsCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(pointsCmd)
 	fixturesCmd.Flags().StringVarP(&pointsArgs.TeamID, "team-id", "t", "", "The team ID from FPL for your team")
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// pointsCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// pointsCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
 
 func determineCaptainFlag(pick responses.Pick) string {

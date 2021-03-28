@@ -2,6 +2,7 @@ package responses
 
 import "time"
 
+// FixturesResponse is the response returned by the FPL API when requesting from the fixtures endpoint
 type FixturesResponse []struct {
 	Code                 int       `json:"code"`
 	Event                int       `json:"event"`
@@ -22,12 +23,14 @@ type FixturesResponse []struct {
 	PulseID              int       `json:"pulse_id"`
 }
 
+// Stat holds a stat for the home and away team
 type Stat struct {
 	Identifier string        `json:"identifier"`
 	A          []StatElement `json:"a"`
 	H          []StatElement `json:"h"`
 }
 
+// StatElement holds a single stat value and element
 type StatElement struct {
 	Value   int `json:"value"`
 	Element int `json:"element"`
