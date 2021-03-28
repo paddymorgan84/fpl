@@ -6,7 +6,7 @@ import (
 	"strconv"
 
 	fpl "github.com/paddymorgan84/fpl/api"
-	responses "github.com/paddymorgan84/fpl/responses"
+	"github.com/paddymorgan84/fpl/helpers"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -20,12 +20,12 @@ var fixturesCmd = &cobra.Command{
 		var gameweek = 0
 		var err error
 
-		gameweekParamater := viper.GetString("gameweek")
+		gameweekParameter := viper.GetString("gameweek")
 
-		if gameweekParamater == "" {
-			gameweek = getCurrentGameweek(bootstrap)
+		if gameweekParameter == "" {
+			gameweek = helpers.GetCurrentGameweek(bootstrap)
 		} else {
-			gameweek, err = strconv.Atoi(gameweekParamater)
+			gameweek, err = strconv.Atoi(gameweekParameter)
 			if err != nil {
 				log.Fatal(err)
 			}
@@ -41,8 +41,8 @@ var fixturesCmd = &cobra.Command{
 
 		for _, fixture := range fixtures {
 			if fixture.Event == gameweek {
-				var homeTeam = getTeam(fixture.HomeTeam, bootstrap)
-				var awayTeam = getTeam(fixture.AwayTeam, bootstrap)
+				var homeTeam = helpers.GetTeam(fixture.HomeTeam, bootstrap)
+				var awayTeam = helpers.GetTeam(fixture.AwayTeam, bootstrap)
 				fmt.Printf("%s vs %s\n", homeTeam, awayTeam)
 			}
 		}
@@ -52,14 +52,4 @@ var fixturesCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(fixturesCmd)
-}
-
-func getTeam(teamID int, bootstrap responses.BootstrapResponse) string {
-	for _, team := range bootstrap.Teams {
-		if team.ID == teamID {
-			return team.Name
-		}
-	}
-
-	return ""
 }

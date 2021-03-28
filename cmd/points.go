@@ -6,11 +6,10 @@ import (
 	"os"
 	"strconv"
 	"text/tabwriter"
-	"time"
 
 	"github.com/juju/ansiterm"
 	fpl "github.com/paddymorgan84/fpl/api"
-	"github.com/paddymorgan84/fpl/responses"
+	"github.com/paddymorgan84/fpl/helpers"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -39,12 +38,12 @@ var pointsCmd = &cobra.Command{
 		var bootstrap = fpl.GetBootstrapData()
 		var gameweek = 0
 
-		gameweekParamater := viper.GetString("gameweek")
+		gameweekParameter := viper.GetString("gameweek")
 
-		if gameweekParamater == "" {
-			gameweek = getCurrentGameweek(bootstrap)
+		if gameweekParameter == "" {
+			gameweek = helpers.GetCurrentGameweek(bootstrap)
 		} else {
-			gameweek, err = strconv.Atoi(gameweekParamater)
+			gameweek, err = strconv.Atoi(gameweekParameter)
 			if err != nil {
 				log.Fatal(err)
 			}
@@ -57,9 +56,9 @@ var pointsCmd = &cobra.Command{
 		fmt.Printf("Gameweek %d points\n\n", gameweek)
 
 		for _, pick := range points.Picks {
-			captain := determineCaptainFlag(pick)
-			name := getPlayerName(pick, bootstrap)
-			playerPoints := getPoints(pick, live)
+			captain := helpers.DetermineCaptainFlag(pick)
+			name := helpers.GetPlayerName(pick, bootstrap)
+			playerPoints := helpers.GetPoints(pick, live)
 
 			fmt.Fprintf(tr, "%s %s\t%d\n", name, captain, playerPoints)
 		}
@@ -77,49 +76,4 @@ var pointsCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(pointsCmd)
 	fixturesCmd.Flags().StringVarP(&pointsArgs.TeamID, "team-id", "t", "", "The team ID from FPL for your team")
-}
-
-func determineCaptainFlag(pick responses.Pick) string {
-	if pick.IsCaptain {
-		return "(C)"
-	}
-	if pick.IsViceCaptain {
-		return "(VC)"
-	}
-
-	return ""
-}
-
-func getPlayerName(pick responses.Pick, bootstrap responses.BootstrapResponse) string {
-	for _, player := range bootstrap.Players {
-		if player.ID == pick.Element {
-			return player.WebName
-		}
-	}
-
-	return ""
-}
-
-func getPoints(pick responses.Pick, live responses.LiveResponse) int {
-	for _, player := range live.Players {
-		if pick.Element == player.ID {
-			return player.Stats.TotalPoints * pick.Multiplier
-		}
-	}
-
-	return 0
-}
-
-func getCurrentGameweek(bootstrap responses.BootstrapResponse) int {
-	for _, gameweek := range bootstrap.Gameweeks {
-		if !gameweek.Finished {
-			if gameweek.DeadlineTime.After(time.Now()) {
-				return gameweek.ID - 1
-			}
-
-			return gameweek.ID
-		}
-	}
-
-	return 38
 }
