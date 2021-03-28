@@ -64,7 +64,11 @@ var pointsCmd = &cobra.Command{
 			fmt.Fprintf(tr, "%s %s\t%d\n", name, captain, playerPoints)
 		}
 
-		tr.Flush()
+		err = tr.Flush()
+
+		if err != nil {
+			log.Fatal(err)
+		}
 
 		fmt.Printf("\nTotal points: %d\n", points.EntryHistory.Points)
 	},
