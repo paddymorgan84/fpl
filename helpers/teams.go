@@ -12,3 +12,8 @@ func GetTeam(teamID int, bootstrap responses.BootstrapResponse) string {
 
 	return ""
 }
+
+// CalculateTeamValue returns a correctly decimalised team value
+func CalculateTeamValue(value int) float32 {
+	return float32(value) / 10
+}

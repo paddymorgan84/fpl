@@ -60,6 +60,19 @@ func GetLive(gameweek int) responses.LiveResponse {
 	return response
 }
 
+// GetHistory returns the managers history for his team
+func GetHistory(teamID int) responses.HistoryResponse {
+	var response responses.HistoryResponse
+
+	err := request("GET", "https://fantasy.premierleague.com/api/entry/"+strconv.Itoa(teamID)+"/history/", &response)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return response
+}
+
 func request(method string, endpoint string, response interface{}) error {
 	var client = &http.Client{}
 	req, err := http.NewRequest(method, endpoint, nil)

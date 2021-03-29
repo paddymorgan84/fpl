@@ -10,7 +10,7 @@
       "request": "launch",
       "mode": "auto",
       "program": "${workspaceFolder}/main.go",
-      "args": ["points", "-g", "1"]
+      "args": ["history", "-t", "3108094"]
     }
   ]
 }

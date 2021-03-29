@@ -26,15 +26,18 @@ var pointsCmd = &cobra.Command{
 	Use:   "points",
 	Short: "Get the points for a specified gameweek (defaults to latest active gameweek)",
 	Run: func(cmd *cobra.Command, args []string) {
+		teamID := 0
 		var err error
-		teamID := viper.GetInt("team-id")
 
-		if teamID == 0 {
+		if pointsArgs.TeamID == "" {
+			teamID = viper.GetInt("team-id")
+		} else {
 			teamID, err = strconv.Atoi(pointsArgs.TeamID)
 			if err != nil {
 				log.Fatal(err)
 			}
 		}
+
 		var bootstrap = fpl.GetBootstrapData()
 		var gameweek = 0
 
