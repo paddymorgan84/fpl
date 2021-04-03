@@ -66,7 +66,7 @@ var detailsCmd = &cobra.Command{
 
 		for _, league := range detailsResponse.Leagues.Classic {
 			if league.LeagueType == "x" {
-				p.Fprintf(tr, "%s\t%d\t%s\n", league.Name, league.EntryRank, calculateRankComparison(league))
+				p.Fprintf(tr, "%s\t%d\t%s\n", league.Name, league.EntryRank, helpers.CalculateRankComparison(league))
 			}
 		}
 
@@ -82,7 +82,7 @@ var detailsCmd = &cobra.Command{
 
 		for _, league := range detailsResponse.Leagues.Classic {
 			if league.LeagueType == "s" {
-				p.Fprintf(tr, "%s\t%d\t%s\n", league.Name, league.EntryRank, calculateRankComparison(league))
+				p.Fprintf(tr, "%s\t%d\t%s\n", league.Name, league.EntryRank, helpers.CalculateRankComparison(league))
 			}
 		}
 
