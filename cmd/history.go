@@ -70,7 +70,7 @@ var historyCmd = &cobra.Command{
 				gameweek.EventTransfersCost,
 				gameweek.TotalPoints,
 				gameweek.OverallRank,
-				helpers.CalculateTeamValue(gameweek.Value))
+				helpers.CalculateMonetaryValue(gameweek.Value))
 
 			if err != nil {
 				log.Fatal(err)

@@ -73,6 +73,19 @@ func GetHistory(teamID int) responses.HistoryResponse {
 	return response
 }
 
+// GetDetails returns the details around the manager, more specifically this current season
+func GetDetails(teamID int) responses.DetailsResponse {
+	var response responses.DetailsResponse
+
+	err := request("GET", "https://fantasy.premierleague.com/api/entry/"+strconv.Itoa(teamID)+"/", &response)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return response
+}
+
 func request(method string, endpoint string, response interface{}) error {
 	var client = &http.Client{}
 	req, err := http.NewRequest(method, endpoint, nil)

@@ -13,7 +13,20 @@ func GetTeam(teamID int, bootstrap responses.BootstrapResponse) string {
 	return ""
 }
 
-// CalculateTeamValue returns a correctly decimalised team value
-func CalculateTeamValue(value int) float32 {
+// CalculateMonetaryValue returns a correctly decimalised team value
+func CalculateMonetaryValue(value int) float32 {
 	return float32(value) / 10
+}
+
+// CalculateRankComparison returns the correct icon depending on rank change
+func CalculateRankComparison(league responses.ClassicLeague) string {
+	if league.EntryRank < league.EntryLastRank {
+		return "🟢"
+	}
+
+	if league.EntryRank > league.EntryLastRank {
+		return "🔴"
+	}
+
+	return "⚪"
 }
