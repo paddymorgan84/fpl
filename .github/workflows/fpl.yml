@@ -1,4 +1,4 @@
-name: Go
+name: fpl
 on: [push, pull_request]
 
 jobs:
@@ -29,9 +29,21 @@ jobs:
           PATH=$(go env GOPATH)/bin:$PATH
           make install
 
+      - name: Spellcheck
+        run: |
+          make spell-check
+
+      - name: Lint
+        run: |
+          make lint
+
       - name: Vet
         run: |
           make vet
+
+      - name: Security
+        run: |
+          make security
 
       - name: Build
         run: |
