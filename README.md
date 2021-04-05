@@ -27,7 +27,7 @@
 
 `fpl` is a CLI tool written in Go that pulls information from the Fantasy Premier League API and presents it in a readable format.
 
-```bash
+```text
 A CLI tool for retrieving FPL data
 
 Usage:
