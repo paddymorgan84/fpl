@@ -49,10 +49,29 @@ var detailsCmd = &cobra.Command{
 		fmt.Println("Manager Details")
 		fmt.Println("------------")
 
-		p.Fprintf(tr, "%s\t%s\n", "Team Name: ", detailsResponse.Name)
-		p.Fprintf(tr, "%s\t%d\n", "Overall Points: ", detailsResponse.SummaryOverallPoints)
-		p.Fprintf(tr, "%s\t%d\n", "Overall Rank: ", detailsResponse.SummaryOverallRank)
-		p.Fprintf(tr, "%s\t%d\n", "Gameweek Points: ", detailsResponse.SummaryEventPoints)
+		_, err = p.Fprintf(tr, "%s\t%s\n", "Team Name: ", detailsResponse.Name)
+
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		_, err = p.Fprintf(tr, "%s\t%d\n", "Overall Points: ", detailsResponse.SummaryOverallPoints)
+
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		_, err = p.Fprintf(tr, "%s\t%d\n", "Overall Rank: ", detailsResponse.SummaryOverallRank)
+
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		_, err = p.Fprintf(tr, "%s\t%d\n", "Gameweek Points: ", detailsResponse.SummaryEventPoints)
+
+		if err != nil {
+			log.Fatal(err)
+		}
 
 		err = tr.Flush()
 
@@ -66,7 +85,11 @@ var detailsCmd = &cobra.Command{
 
 		for _, league := range detailsResponse.Leagues.Classic {
 			if league.LeagueType == "x" {
-				p.Fprintf(tr, "%s\t%d\t%s\n", league.Name, league.EntryRank, helpers.CalculateRankComparison(league))
+				_, err = p.Fprintf(tr, "%s\t%d\t%s\n", league.Name, league.EntryRank, helpers.CalculateRankComparison(league))
+
+				if err != nil {
+					log.Fatal(err)
+				}
 			}
 		}
 
@@ -82,7 +105,11 @@ var detailsCmd = &cobra.Command{
 
 		for _, league := range detailsResponse.Leagues.Classic {
 			if league.LeagueType == "s" {
-				p.Fprintf(tr, "%s\t%d\t%s\n", league.Name, league.EntryRank, helpers.CalculateRankComparison(league))
+				_, err = p.Fprintf(tr, "%s\t%d\t%s\n", league.Name, league.EntryRank, helpers.CalculateRankComparison(league))
+
+				if err != nil {
+					log.Fatal(err)
+				}
 			}
 		}
 
@@ -96,9 +123,23 @@ var detailsCmd = &cobra.Command{
 		fmt.Println("Transfers & Finance")
 		fmt.Println("------------")
 
-		p.Fprintf(tr, "%s\t%d\n", "Total transfers: ", detailsResponse.LastDeadlineTotalTransfers)
-		p.Fprintf(tr, "%s\t£%.1f\n", "Squad value: ", helpers.CalculateMonetaryValue(detailsResponse.LastDeadlineValue))
-		p.Fprintf(tr, "%s\t£%.1f\n", "In the bank: ", helpers.CalculateMonetaryValue(detailsResponse.LastDeadlineBank))
+		_, err = p.Fprintf(tr, "%s\t%d\n", "Total transfers: ", detailsResponse.LastDeadlineTotalTransfers)
+
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		_, err = p.Fprintf(tr, "%s\t£%.1f\n", "Squad value: ", helpers.CalculateMonetaryValue(detailsResponse.LastDeadlineValue))
+
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		_, err = p.Fprintf(tr, "%s\t£%.1f\n", "In the bank: ", helpers.CalculateMonetaryValue(detailsResponse.LastDeadlineBank))
+
+		if err != nil {
+			log.Fatal(err)
+		}
 
 		err = tr.Flush()
 
