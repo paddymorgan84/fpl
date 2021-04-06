@@ -4,7 +4,7 @@
 </p>
 
 <p align="center">
-  A Go tool for Fantasy Premier League
+  A Go CLI tool for Fantasy Premier League
 </p>
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
