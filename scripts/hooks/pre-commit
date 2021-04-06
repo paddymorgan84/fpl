@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+#
+# Git pre-commit hook
+#
+
+function runTarget {
+  target="${1}"
+
+  printf '\n🏃‍♀️ [EXEC] Running target: %s\n' "${target}"
+
+  if ! make "${target}"; then
+    printf '⚠️  [FAIL] %s\n' "${target}"
+    exit 1
+  fi
+
+  printf '\n\n\n'
+}
+
+TARGETS=(
+  lint
+  security
+  spell-check
+  update-toc
+  vet
+)
+
+for target in "${TARGETS[@]}"; do runTarget "${target}"; done
