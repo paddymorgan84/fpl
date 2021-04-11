@@ -1,6 +1,6 @@
 <h1 align="center"> FPL </h1> <br>
 <p align="center">
-  <img alt="GitPoint" title="GitPoint" src="img/header.png" width="450">
+  <img alt="fpl" title="fpl" src="img/header.png" width="450">
 </p>
 
 <p align="center">
