@@ -1,6 +1,28 @@
 package helpers
 
-import "github.com/paddymorgan84/fpl/responses"
+import (
+	"log"
+	"strconv"
+
+	"github.com/paddymorgan84/fpl/responses"
+	"github.com/spf13/viper"
+)
+
+// GetTeamID will either convert the teamID provided to an int, or return the teamID stored in config under "team-id"
+func GetTeamID(teamID string) int {
+	if teamID == "" {
+		return viper.GetInt("team-id")
+	}
+
+	team, err := strconv.Atoi(teamID)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return team
+
+}
 
 // GetTeam cross references the teamId with the bootstrap data to get the official team name
 func GetTeam(teamID int, bootstrap responses.BootstrapResponse) string {

@@ -2,16 +2,11 @@ package cmd
 
 import (
 	"fmt"
-	"log"
-	"os"
-	"strconv"
-	"text/tabwriter"
 
-	"github.com/juju/ansiterm"
 	fpl "github.com/paddymorgan84/fpl/api"
 	"github.com/paddymorgan84/fpl/helpers"
+	"github.com/paddymorgan84/fpl/ui"
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 // PointsArgs are the arguments you can pass to the points command
@@ -26,53 +21,15 @@ var pointsCmd = &cobra.Command{
 	Use:   "points",
 	Short: "Get the points for a specified gameweek (defaults to latest active gameweek)",
 	Run: func(cmd *cobra.Command, args []string) {
-		teamID := 0
-		var err error
-
-		if pointsArgs.TeamID == "" {
-			teamID = viper.GetInt("team-id")
-		} else {
-			teamID, err = strconv.Atoi(pointsArgs.TeamID)
-			if err != nil {
-				log.Fatal(err)
-			}
-		}
-
+		teamID := helpers.GetTeamID(pointsArgs.TeamID)
 		var bootstrap = fpl.GetBootstrapData()
-		var gameweek = 0
-
-		gameweekParameter := viper.GetString("gameweek")
-
-		if gameweekParameter == "" {
-			gameweek = helpers.GetCurrentGameweek(bootstrap)
-		} else {
-			gameweek, err = strconv.Atoi(gameweekParameter)
-			if err != nil {
-				log.Fatal(err)
-			}
-		}
-
+		gameweek := helpers.GetCurrentGameweek(bootstrap)
 		var points = fpl.GetPoints(teamID, gameweek)
 		var live = fpl.GetLive(gameweek)
-		tr := ansiterm.NewTabWriter(os.Stdout, 0, 0, 1, ' ', tabwriter.FilterHTML)
 
-		fmt.Printf("Gameweek %d points\n\n", gameweek)
+		ui.PrintHeader(fmt.Sprintf("Gameweek %d points", gameweek))
+		ui.PrintTeamPoints(bootstrap, live, points)
 
-		for _, pick := range points.Picks {
-			captain := helpers.DetermineCaptainFlag(pick)
-			name := helpers.GetPlayerName(pick, bootstrap)
-			playerPoints := helpers.GetPoints(pick, live)
-
-			fmt.Fprintf(tr, "%s %s\t%d\n", name, captain, playerPoints)
-		}
-
-		err = tr.Flush()
-
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		fmt.Printf("\nTotal points: %d\n", points.EntryHistory.Points)
 	},
 }
 

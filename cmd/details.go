@@ -1,19 +1,10 @@
 package cmd
 
 import (
-	"fmt"
-	"log"
-	"os"
-	"strconv"
-	"text/tabwriter"
-
-	"github.com/juju/ansiterm"
 	"github.com/paddymorgan84/fpl/api"
 	"github.com/paddymorgan84/fpl/helpers"
+	"github.com/paddymorgan84/fpl/ui"
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
-	"golang.org/x/text/language"
-	"golang.org/x/text/message"
 )
 
 // DetailsArgs are the arguments you can pass to the history command
@@ -28,124 +19,20 @@ var detailsCmd = &cobra.Command{
 	Use:   "details",
 	Short: "Returns details of manager for current season, e.g. league standings, cash in the bank, overall points etc",
 	Run: func(cmd *cobra.Command, args []string) {
-		teamID := 0
-		var err error
-
-		if detailsArgs.TeamID == "" {
-			teamID = viper.GetInt("team-id")
-		} else {
-			teamID, err = strconv.Atoi(detailsArgs.TeamID)
-			if err != nil {
-				log.Fatal(err)
-			}
-		}
-
-		p := message.NewPrinter(language.English)
+		teamID := helpers.GetTeamID(detailsArgs.TeamID)
 		detailsResponse := api.GetDetails(teamID)
 
-		tr := ansiterm.NewTabWriter(os.Stdout, 0, 0, 1, ' ', tabwriter.FilterHTML)
+		ui.PrintHeader("Manager Details")
+		ui.PrintManagerDetails(detailsResponse)
 
-		fmt.Println("\n------------")
-		fmt.Println("Manager Details")
-		fmt.Println("------------")
+		ui.PrintHeader("Classic Leagues")
+		ui.PrintClassicLeagues(detailsResponse)
 
-		_, err = p.Fprintf(tr, "%s\t%s\n", "Team Name: ", detailsResponse.Name)
+		ui.PrintHeader("Global Leagues")
+		ui.PrintGlobalLeagues(detailsResponse)
 
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		_, err = p.Fprintf(tr, "%s\t%d\n", "Overall Points: ", detailsResponse.SummaryOverallPoints)
-
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		_, err = p.Fprintf(tr, "%s\t%d\n", "Overall Rank: ", detailsResponse.SummaryOverallRank)
-
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		_, err = p.Fprintf(tr, "%s\t%d\n", "Gameweek Points: ", detailsResponse.SummaryEventPoints)
-
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		err = tr.Flush()
-
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		fmt.Println("\n------------")
-		fmt.Println("Classic Leagues")
-		fmt.Println("------------")
-
-		for _, league := range detailsResponse.Leagues.Classic {
-			if league.LeagueType == "x" {
-				_, err = p.Fprintf(tr, "%s\t%d\t%s\n", league.Name, league.EntryRank, helpers.CalculateRankComparison(league))
-
-				if err != nil {
-					log.Fatal(err)
-				}
-			}
-		}
-
-		err = tr.Flush()
-
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		fmt.Println("\n------------")
-		fmt.Println("Global Leagues")
-		fmt.Println("------------")
-
-		for _, league := range detailsResponse.Leagues.Classic {
-			if league.LeagueType == "s" {
-				_, err = p.Fprintf(tr, "%s\t%d\t%s\n", league.Name, league.EntryRank, helpers.CalculateRankComparison(league))
-
-				if err != nil {
-					log.Fatal(err)
-				}
-			}
-		}
-
-		err = tr.Flush()
-
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		fmt.Println("\n------------")
-		fmt.Println("Transfers & Finance")
-		fmt.Println("------------")
-
-		_, err = p.Fprintf(tr, "%s\t%d\n", "Total transfers: ", detailsResponse.LastDeadlineTotalTransfers)
-
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		_, err = p.Fprintf(tr, "%s\t£%.1f\n", "Squad value: ", helpers.CalculateMonetaryValue(detailsResponse.LastDeadlineValue))
-
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		_, err = p.Fprintf(tr, "%s\t£%.1f\n", "In the bank: ", helpers.CalculateMonetaryValue(detailsResponse.LastDeadlineBank))
-
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		err = tr.Flush()
-
-		if err != nil {
-			log.Fatal(err)
-		}
+		ui.PrintHeader("Transfers & Finance")
+		ui.PrintTransfersAndFinance(detailsResponse)
 
 	},
 }
