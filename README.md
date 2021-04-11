@@ -9,6 +9,7 @@
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
 ## Table of Contents
 
 - [Introduction](#introduction)
@@ -39,6 +40,7 @@ Available Commands:
   help        Help about any command
   history     Returns history for a managers current and past seasons
   points      Get the points for a specified gameweek (defaults to latest active gameweek)
+  rivals      Show the points for all of your rivals (specified in config) for a specified gameweek
 
 Flags:
       --config string     config file (default is $HOME/.fpl.yaml)
