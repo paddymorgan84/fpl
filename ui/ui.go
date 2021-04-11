@@ -49,6 +49,40 @@ func PrintTeamPoints(bootstrap responses.BootstrapResponse, live responses.LiveR
 	fmt.Printf("\nTotal points: %d\n", points.EntryHistory.Points)
 }
 
+// PrintRivalPoints prints out the details for the rivals given the teamID in details
+func PrintRivalPoints(bootstrap responses.BootstrapResponse, live responses.LiveResponse, points responses.PointsResponse, details responses.DetailsResponse) {
+	p := message.NewPrinter(language.English)
+	tr := ansiterm.NewTabWriter(os.Stdout, 0, 0, 1, ' ', tabwriter.FilterHTML)
+
+	_, err := p.Fprintf(tr, "%s\t%s\n", "Team Name: ", details.Name)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	_, err = p.Fprintf(tr, "%s\t%s %s\n", "Manager: ", details.PlayerFirstName, details.PlayerLastName)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for _, pick := range points.Picks {
+		captain := helpers.DetermineCaptainFlag(pick)
+		name := helpers.GetPlayerName(pick, bootstrap)
+		playerPoints := helpers.GetPoints(pick, live)
+
+		fmt.Fprintf(tr, "%s %s\t%d\n", name, captain, playerPoints)
+	}
+
+	err = tr.Flush()
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Printf("\nTotal points: %d\n\n\n", points.EntryHistory.Points)
+}
+
 // PrintManagerDetails prints the summary details for a manager
 func PrintManagerDetails(details responses.DetailsResponse) {
 	p := message.NewPrinter(language.English)
