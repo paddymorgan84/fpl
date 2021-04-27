@@ -3,5 +3,11 @@
     "make lint-markdown",
     "make spell-check",
     "make update-toc"
+  ],
+  "*.go": [
+    "make vet",
+    "make lint-go",
+    "make security",
+    "make build"
   ]
 }
