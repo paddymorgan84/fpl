@@ -9,11 +9,15 @@
     "markdownlint": "^0.23.1",
     "markdownlint-cli": "^0.27.1"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "husky": "^6.0.0",
+    "lint-staged": "^10.5.4"
+  },
   "scripts": {
     "toc": "doctoc --title \"## Table of Contents\" .",
     "spell-check": "mdspell -arn --en-gb \"{infrastructure,scripts}/**/*.md\" \"!**/node_modules/**/*.md\" README.md",
-    "lint-markdown": "markdownlint README.md --ignore \"**/node_modules/**/*.md\""
+    "lint-markdown": "markdownlint README.md --ignore \"**/node_modules/**/*.md\"",
+    "prepare": "husky install"
   },
   "repository": {
     "type": "git",

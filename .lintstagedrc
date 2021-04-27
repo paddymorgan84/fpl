@@ -1,0 +1,7 @@
+{
+  "*.md": [
+    "make lint-markdown",
+    "make spell-check",
+    "make update-toc"
+  ]
+}
