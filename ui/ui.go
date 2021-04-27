@@ -195,12 +195,27 @@ func PrintTransfersAndFinance(detailsResponse responses.DetailsResponse) {
 
 // PrintGameweekFixtures prints the fixtures for the specified gameweek
 func PrintGameweekFixtures(bootstrap responses.BootstrapResponse, fixtures responses.FixturesResponse, gameweek int) {
+	tr := ansiterm.NewTabWriter(os.Stdout, 0, 0, 1, ' ', tabwriter.FilterHTML)
 	for _, fixture := range fixtures {
 		if fixture.Event == gameweek {
 			var homeTeam = helpers.GetTeam(fixture.HomeTeam, bootstrap)
 			var awayTeam = helpers.GetTeam(fixture.AwayTeam, bootstrap)
-			fmt.Printf("%s vs %s\n", homeTeam, awayTeam)
+
+			if fixture.Started {
+				var homeScore = fixture.HomeTeamScore
+				var awayScore = fixture.AwayTeamScore
+				fmt.Fprintf(tr, "%s\t%d-%d\t%s\n", homeTeam, homeScore, awayScore, awayTeam)
+
+			} else {
+				fmt.Fprintf(tr, "%s\tvs\t%s\n", homeTeam, awayTeam)
+			}
 		}
+	}
+
+	err := tr.Flush()
+
+	if err != nil {
+		log.Fatal(err)
 	}
 }
 
