@@ -36,7 +36,7 @@ func init() {
 	// will be global for your application.
 
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.fpl.yaml)")
-	rootCmd.PersistentFlags().StringP("gameweek", "g", "", "The gameweek you wish to see the fixtures for")
+	rootCmd.PersistentFlags().StringP("gameweek", "g", "", "The gameweek you wish to see details for")
 	err := viper.BindPFlag("gameweek", rootCmd.PersistentFlags().Lookup("gameweek"))
 
 	if err != nil {
