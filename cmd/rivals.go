@@ -12,36 +12,36 @@ import (
 	"github.com/spf13/viper"
 )
 
-// rivalsCmd represents the rivals command
-var rivalsCmd = &cobra.Command{
-	Use:   "rivals",
-	Short: "Show the points for all of your rivals (specified in config) for a specified gameweek",
-	Run: func(cmd *cobra.Command, args []string) {
+// BuildRivalsCommand returns the rivals cobra command
+func BuildRivalsCommand() *cobra.Command {
+	var cmd = &cobra.Command{
+		Use:   "rivals",
+		Short: "Show the points for all of your rivals (specified in config) for a specified gameweek",
+		Run: func(cmd *cobra.Command, args []string) {
 
-		ui.PrintHeader("Rivals")
+			ui.PrintHeader("Rivals")
 
-		if !viper.IsSet("rivals") {
-			fmt.Println("No rivals specified. Update config for this to work.")
-		}
-
-		bootstrap := api.GetBootstrapData()
-		gameweek := helpers.GetCurrentGameweek(bootstrap)
-		live := api.GetLive(gameweek)
-
-		for _, rival := range viper.GetStringSlice("rivals") {
-			teamID, err := strconv.Atoi(rival)
-
-			if err != nil {
-				log.Fatal(err)
+			if !viper.IsSet("rivals") {
+				fmt.Println("No rivals specified. Update config for this to work.")
 			}
 
-			var points = api.GetPoints(teamID, gameweek)
-			detailsResponse := api.GetDetails(teamID)
-			ui.PrintRivalPoints(bootstrap, live, points, detailsResponse)
-		}
-	},
-}
+			bootstrap := api.GetBootstrapData()
+			gameweek := helpers.GetCurrentGameweek(bootstrap)
+			live := api.GetLive(gameweek)
 
-func init() {
-	rootCmd.AddCommand(rivalsCmd)
+			for _, rival := range viper.GetStringSlice("rivals") {
+				teamID, err := strconv.Atoi(rival)
+
+				if err != nil {
+					log.Fatal(err)
+				}
+
+				var points = api.GetPoints(teamID, gameweek)
+				detailsResponse := api.GetDetails(teamID)
+				ui.PrintRivalPoints(bootstrap, live, points, detailsResponse)
+			}
+		},
+	}
+
+	return cmd
 }

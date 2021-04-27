@@ -16,24 +16,26 @@ type PointsArgs struct {
 
 var pointsArgs PointsArgs
 
-// pointsCmd represents the points command
-var pointsCmd = &cobra.Command{
-	Use:   "points",
-	Short: "Get the points for a specified gameweek (defaults to latest active gameweek)",
-	Run: func(cmd *cobra.Command, args []string) {
-		teamID := helpers.GetTeamID(pointsArgs.TeamID)
-		var bootstrap = fpl.GetBootstrapData()
-		gameweek := helpers.GetCurrentGameweek(bootstrap)
-		var points = fpl.GetPoints(teamID, gameweek)
-		var live = fpl.GetLive(gameweek)
+// BuildPointsCommand returns the points cobra command
+func BuildPointsCommand() *cobra.Command {
+	var cmd = &cobra.Command{
+		Use:   "points",
+		Short: "Get the points for a specified gameweek (defaults to latest active gameweek)",
+		Run: func(cmd *cobra.Command, args []string) {
+			teamID := helpers.GetTeamID(pointsArgs.TeamID)
+			var bootstrap = fpl.GetBootstrapData()
+			gameweek := helpers.GetCurrentGameweek(bootstrap)
+			var points = fpl.GetPoints(teamID, gameweek)
+			var live = fpl.GetLive(gameweek)
 
-		ui.PrintHeader(fmt.Sprintf("Gameweek %d points", gameweek))
-		ui.PrintTeamPoints(bootstrap, live, points)
+			ui.PrintHeader(fmt.Sprintf("Gameweek %d points", gameweek))
+			ui.PrintTeamPoints(bootstrap, live, points)
 
-	},
-}
+		},
+	}
 
-func init() {
-	rootCmd.AddCommand(pointsCmd)
-	fixturesCmd.Flags().StringVarP(&pointsArgs.TeamID, "team-id", "t", "", "The team ID from FPL for your team")
+	var flags = cmd.Flags()
+	flags.StringVarP(&pointsArgs.TeamID, "team-id", "t", "", "The team ID from FPL for your team")
+
+	return cmd
 }

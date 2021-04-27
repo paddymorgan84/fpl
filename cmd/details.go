@@ -14,30 +14,33 @@ type DetailsArgs struct {
 
 var detailsArgs DetailsArgs
 
-// detailsCmd represents the details command
-var detailsCmd = &cobra.Command{
-	Use:   "details",
-	Short: "Returns details of manager for current season, e.g. league standings, cash in the bank, overall points etc",
-	Run: func(cmd *cobra.Command, args []string) {
-		teamID := helpers.GetTeamID(detailsArgs.TeamID)
-		detailsResponse := api.GetDetails(teamID)
+// BuildDetailsCommand returns the details cobra command
+func BuildDetailsCommand() *cobra.Command {
+	var cmd = &cobra.Command{
+		Use:   "details",
+		Short: "Returns details of manager for current season, e.g. league standings, cash in the bank, overall points etc",
+		Run:   getDetails,
+	}
 
-		ui.PrintHeader("Manager Details")
-		ui.PrintManagerDetails(detailsResponse)
+	flags := cmd.Flags()
+	flags.StringVarP(&detailsArgs.TeamID, "team-id", "t", "", "The team ID from FPL for your team")
 
-		ui.PrintHeader("Classic Leagues")
-		ui.PrintClassicLeagues(detailsResponse)
-
-		ui.PrintHeader("Global Leagues")
-		ui.PrintGlobalLeagues(detailsResponse)
-
-		ui.PrintHeader("Transfers & Finance")
-		ui.PrintTransfersAndFinance(detailsResponse)
-
-	},
+	return cmd
 }
 
-func init() {
-	rootCmd.AddCommand(detailsCmd)
-	detailsCmd.Flags().StringVarP(&detailsArgs.TeamID, "team-id", "t", "", "The team ID from FPL for your team")
+func getDetails(cmd *cobra.Command, args []string) {
+	teamID := helpers.GetTeamID(detailsArgs.TeamID)
+	detailsResponse := api.GetDetails(teamID)
+
+	ui.PrintHeader("Manager Details")
+	ui.PrintManagerDetails(detailsResponse)
+
+	ui.PrintHeader("Classic Leagues")
+	ui.PrintClassicLeagues(detailsResponse)
+
+	ui.PrintHeader("Global Leagues")
+	ui.PrintGlobalLeagues(detailsResponse)
+
+	ui.PrintHeader("Transfers & Finance")
+	ui.PrintTransfersAndFinance(detailsResponse)
 }

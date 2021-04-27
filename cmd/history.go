@@ -14,27 +14,31 @@ type HistoryArgs struct {
 
 var historyArgs HistoryArgs
 
-// historyCmd represents the history command
-var historyCmd = &cobra.Command{
-	Use:   "history",
-	Short: "Returns history for a managers current and past seasons",
-	Run: func(cmd *cobra.Command, args []string) {
-		teamID := helpers.GetTeamID(historyArgs.TeamID)
-		historyResponse := api.GetHistory(teamID)
+// BuildHistoryCommand returns the history cobra command
+func BuildHistoryCommand() *cobra.Command {
+	var cmd = &cobra.Command{
+		Use:   "history",
+		Short: "Returns history for a managers current and past seasons",
+		Run:   getHistory,
+	}
 
-		ui.PrintHeader("This season")
-		ui.PrintSeasonDetails(historyResponse)
+	var flags = cmd.Flags()
 
-		ui.PrintHeader("Chips")
-		ui.PrintChipDetails(historyResponse)
+	flags.StringVarP(&historyArgs.TeamID, "team-id", "t", "", "The team ID from FPL for your team")
 
-		ui.PrintHeader("Previous Seasons")
-		ui.PrintPreviousSeasonDetails(historyResponse)
-
-	},
+	return cmd
 }
 
-func init() {
-	rootCmd.AddCommand(historyCmd)
-	historyCmd.Flags().StringVarP(&historyArgs.TeamID, "team-id", "t", "", "The team ID from FPL for your team")
+func getHistory(cmd *cobra.Command, args []string) {
+	teamID := helpers.GetTeamID(historyArgs.TeamID)
+	historyResponse := api.GetHistory(teamID)
+
+	ui.PrintHeader("This season")
+	ui.PrintSeasonDetails(historyResponse)
+
+	ui.PrintHeader("Chips")
+	ui.PrintChipDetails(historyResponse)
+
+	ui.PrintHeader("Previous Seasons")
+	ui.PrintPreviousSeasonDetails(historyResponse)
 }

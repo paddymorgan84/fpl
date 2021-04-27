@@ -9,21 +9,22 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// fixturesCmd represents the fixtures command
-var fixturesCmd = &cobra.Command{
-	Use:   "fixtures",
-	Short: "Get the fixtures for a specific gameweek",
-	Run: func(cmd *cobra.Command, args []string) {
-		var bootstrap = fpl.GetBootstrapData()
-		gameweek := helpers.GetCurrentGameweek(bootstrap)
-		var fixtures = fpl.GetFixtures()
+// BuildFixturesCommand returns the fixtures cobra command
+func BuildFixturesCommand() *cobra.Command {
+	var cmd = &cobra.Command{
+		Use:   "fixtures",
+		Short: "Get the fixtures for a specific gameweek",
+		Run:   getFixtures,
+	}
 
-		ui.PrintHeader(fmt.Sprintf("Gameweek %d fixtures", gameweek))
-		ui.PrintGameweekFixtures(bootstrap, fixtures, gameweek)
-
-	},
+	return cmd
 }
 
-func init() {
-	rootCmd.AddCommand(fixturesCmd)
+func getFixtures(cmd *cobra.Command, args []string) {
+	var bootstrap = fpl.GetBootstrapData()
+	gameweek := helpers.GetCurrentGameweek(bootstrap)
+	var fixtures = fpl.GetFixtures()
+
+	ui.PrintHeader(fmt.Sprintf("Gameweek %d fixtures", gameweek))
+	ui.PrintGameweekFixtures(bootstrap, fixtures, gameweek)
 }
