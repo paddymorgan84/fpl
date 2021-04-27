@@ -9,7 +9,6 @@
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-
 ## Table of Contents
 
 - [Introduction](#introduction)
@@ -17,6 +16,7 @@
 - [Installation](#installation)
 - [Configuration](#configuration)
   - [Configuring your team ID](#configuring-your-team-id)
+  - [Configuring your rivals](#configuring-your-rivals)
 - [Acknowledgements](#acknowledgements)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -73,13 +73,26 @@ go install
 
 Setting a default team id prevents the need for you to provide it when you want to use `fpl` for your own team.
 
-```bash
+```yaml
 team-id: 1327470
 ```
 
 You can get your FPL team id via the Gameweek History page, linked on your FPL squad page. Simply click that link and check the URL displayed in your browser. You should see something like this:
 
 `http://fantasy.premierleague.com/entry/xxxx/history/`
+
+### Configuring your rivals
+
+You can add your rivals team ids to allow you to see their points for a specified gameweek
+
+```yaml
+rivals:
+  - 2619024
+  - 1818664
+  - 3108094
+```
+
+You can obtain their FPL team id via the same method specified [above](#configuring-your-team-id).
 
 ## Acknowledgements
 
