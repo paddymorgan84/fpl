@@ -44,7 +44,7 @@ Available Commands:
 
 Flags:
       --config string     config file (default is $HOME/.fpl.yaml)
-  -g, --gameweek string   The gameweek you wish to see the fixtures for
+  -g, --gameweek string   The gameweek you wish to see details for
   -h, --help              help for fpl
   -t, --toggle            Help message for toggle
 
@@ -71,7 +71,7 @@ go install
 
 ### Configuring your team ID
 
-Setting a default team id prevents the need for you to provide it when you want to use `fpl` for your own team.
+Setting a default team ID prevents the need for you to provide it when you want to use `fpl` for your own team.
 
 ```yaml
 team-id: 1327470
@@ -83,7 +83,7 @@ You can get your FPL team id via the Gameweek History page, linked on your FPL s
 
 ### Configuring your rivals
 
-You can add your rivals team ids to allow you to see their points for a specified gameweek
+You can add your rivals team ID's to allow you to see their points for a specified gameweek
 
 ```yaml
 rivals:
@@ -97,4 +97,4 @@ You can obtain their FPL team id via the same method specified [above](#configur
 ## Acknowledgements
 
 - Shoutout to [Frenzel Timothy](https://medium.com/@frenzelts) for his [how-to guide](https://medium.com/@frenzelts/fantasy-premier-league-api-endpoints-a-detailed-guide-acbd5598eb19) on using the Fantasy Premier League API 👏
-- I've used [Cobra](https://github.com/spf13/cobra) to help me create the scaffolding for a go CLI tool. I would highly recommend it 👍
+- I've used [Cobra](https://github.com/spf13/cobra) to help me create the scaffolding for a Go CLI tool. I would highly recommend it 👍
