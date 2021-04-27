@@ -34,13 +34,7 @@ clean: ## Clean the repo
 	@echo "✔️  Done"
 
 .PHONY: install
-install: install-hooks install-go install-npm ## Lint everything
-
-.PHONY: install-hooks
-install-hooks:
-	@echo "🎣 Installing git hooks"
-	node scripts/install-hooks.js
-	@echo "✔️  Done"
+install: install-go install-npm ## Install what we need
 
 .PHONY: install-npm
 install-npm: ## Install the local node dependencies
