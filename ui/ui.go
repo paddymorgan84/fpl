@@ -40,11 +40,7 @@ func PrintTeamPoints(bootstrap responses.BootstrapResponse, live responses.LiveR
 		fmt.Fprintf(tr, "%s %s\t%d\n", name, captain, playerPoints)
 	}
 
-	err := tr.Flush()
-
-	if err != nil {
-		log.Fatal(err)
-	}
+	helpers.AutoFlush(tr)
 
 	fmt.Printf("\nTotal points: %d\n", points.EntryHistory.Points)
 }
@@ -74,11 +70,7 @@ func PrintRivalPoints(bootstrap responses.BootstrapResponse, live responses.Live
 		fmt.Fprintf(tr, "%s %s\t%d\n", name, captain, playerPoints)
 	}
 
-	err = tr.Flush()
-
-	if err != nil {
-		log.Fatal(err)
-	}
+	helpers.AutoFlush(tr)
 
 	fmt.Printf("\nTotal points: %d\n\n\n", points.EntryHistory.Points)
 }
@@ -112,11 +104,7 @@ func PrintManagerDetails(details responses.DetailsResponse) {
 		log.Fatal(err)
 	}
 
-	err = tr.Flush()
-
-	if err != nil {
-		log.Fatal(err)
-	}
+	helpers.AutoFlush(tr)
 }
 
 // PrintClassicLeagues prints all classic leagues and the current rank for each
@@ -134,11 +122,7 @@ func PrintClassicLeagues(details responses.DetailsResponse) {
 		}
 	}
 
-	err := tr.Flush()
-
-	if err != nil {
-		log.Fatal(err)
-	}
+	helpers.AutoFlush(tr)
 }
 
 // PrintGlobalLeagues prints all global leagues and the current rank for each
@@ -156,11 +140,7 @@ func PrintGlobalLeagues(detailsResponse responses.DetailsResponse) {
 		}
 	}
 
-	err := tr.Flush()
-
-	if err != nil {
-		log.Fatal(err)
-	}
+	helpers.AutoFlush(tr)
 }
 
 // PrintTransfersAndFinance prints details for a teamsd transfers, value and money in the bank
@@ -186,11 +166,7 @@ func PrintTransfersAndFinance(detailsResponse responses.DetailsResponse) {
 		log.Fatal(err)
 	}
 
-	err = tr.Flush()
-
-	if err != nil {
-		log.Fatal(err)
-	}
+	helpers.AutoFlush(tr)
 }
 
 // PrintGameweekFixtures prints the fixtures for the specified gameweek
@@ -212,11 +188,7 @@ func PrintGameweekFixtures(bootstrap responses.BootstrapResponse, fixtures respo
 		}
 	}
 
-	err := tr.Flush()
-
-	if err != nil {
-		log.Fatal(err)
-	}
+	helpers.AutoFlush(tr)
 }
 
 // PrintSeasonDetails prints a teams current season details for each gameweek
@@ -252,11 +224,7 @@ func PrintSeasonDetails(history responses.HistoryResponse) {
 		}
 	}
 
-	err := tr.Flush()
-
-	if err != nil {
-		log.Fatal(err)
-	}
+	helpers.AutoFlush(tr)
 }
 
 // PrintChipDetails prints details around what chips have been used
@@ -274,11 +242,7 @@ func PrintChipDetails(history responses.HistoryResponse) {
 		}
 	}
 
-	err := tr.Flush()
-
-	if err != nil {
-		log.Fatal(err)
-	}
+	helpers.AutoFlush(tr)
 }
 
 // PrintPreviousSeasonDetails prints a teams record from past seasons
@@ -296,9 +260,5 @@ func PrintPreviousSeasonDetails(history responses.HistoryResponse) {
 		}
 	}
 
-	err := tr.Flush()
-
-	if err != nil {
-		log.Fatal(err)
-	}
+	helpers.AutoFlush(tr)
 }
