@@ -15,11 +15,13 @@ type HistoryArgs struct {
 var historyArgs HistoryArgs
 
 // BuildHistoryCommand returns the history cobra command
-func BuildHistoryCommand() *cobra.Command {
+func BuildHistoryCommand(c *api.FplAPI) *cobra.Command {
 	var cmd = &cobra.Command{
 		Use:   "history",
 		Short: "Returns history for a managers current and past seasons",
-		Run:   getHistory,
+		Run: func(cmd *cobra.Command, args []string) {
+			getHistory(*c)
+		},
 	}
 
 	var flags = cmd.Flags()
@@ -29,9 +31,9 @@ func BuildHistoryCommand() *cobra.Command {
 	return cmd
 }
 
-func getHistory(cmd *cobra.Command, args []string) {
+func getHistory(c api.FplAPI) {
 	teamID := helpers.GetTeamID(historyArgs.TeamID)
-	historyResponse := api.GetHistory(teamID)
+	historyResponse := c.GetHistory(teamID)
 
 	ui.PrintHeader("This season")
 	ui.PrintSeasonDetails(historyResponse)

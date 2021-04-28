@@ -15,11 +15,13 @@ type DetailsArgs struct {
 var detailsArgs DetailsArgs
 
 // BuildDetailsCommand returns the details cobra command
-func BuildDetailsCommand() *cobra.Command {
+func BuildDetailsCommand(c *api.FplAPI) *cobra.Command {
 	var cmd = &cobra.Command{
 		Use:   "details",
 		Short: "Returns details of manager for current season, e.g. league standings, cash in the bank, overall points etc",
-		Run:   getDetails,
+		Run: func(cmd *cobra.Command, args []string) {
+			getDetails(*c)
+		},
 	}
 
 	flags := cmd.Flags()
@@ -28,9 +30,9 @@ func BuildDetailsCommand() *cobra.Command {
 	return cmd
 }
 
-func getDetails(cmd *cobra.Command, args []string) {
+func getDetails(c api.FplAPI) {
 	teamID := helpers.GetTeamID(detailsArgs.TeamID)
-	detailsResponse := api.GetDetails(teamID)
+	detailsResponse := c.GetDetails(teamID)
 
 	ui.PrintHeader("Manager Details")
 	ui.PrintManagerDetails(detailsResponse)

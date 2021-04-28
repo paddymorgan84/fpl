@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/paddymorgan84/fpl/api"
 	"github.com/spf13/cobra"
 
 	homedir "github.com/mitchellh/go-homedir"
@@ -38,17 +39,18 @@ func init() {
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.fpl.yaml)")
 	rootCmd.PersistentFlags().StringP("gameweek", "g", "", "The gameweek you wish to see details for")
 	err := viper.BindPFlag("gameweek", rootCmd.PersistentFlags().Lookup("gameweek"))
+	var fplClient api.FplAPI = api.New()
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	// Add all the commands we want
-	rootCmd.AddCommand(BuildDetailsCommand())
-	rootCmd.AddCommand(BuildFixturesCommand())
-	rootCmd.AddCommand(BuildHistoryCommand())
-	rootCmd.AddCommand(BuildPointsCommand())
-	rootCmd.AddCommand(BuildRivalsCommand())
+	rootCmd.AddCommand(BuildDetailsCommand(&fplClient))
+	rootCmd.AddCommand(BuildFixturesCommand(&fplClient))
+	rootCmd.AddCommand(BuildHistoryCommand(&fplClient))
+	rootCmd.AddCommand(BuildPointsCommand(&fplClient))
+	rootCmd.AddCommand(BuildRivalsCommand(&fplClient))
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.

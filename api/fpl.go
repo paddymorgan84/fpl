@@ -10,10 +10,24 @@ import (
 	responses "github.com/paddymorgan84/fpl/responses"
 )
 
+// Client is the wrapper for the FplApi interface
+type Client struct {
+	Fpl *http.Client
+}
+
+// New will generate our FPL client to interact with the FPL API
+func New() Client {
+	client := Client{
+		Fpl: &http.Client{},
+	}
+
+	return client
+}
+
 // GetBootstrapData returns all the bootstrap data that serves any additional calls
-func GetBootstrapData() responses.BootstrapResponse {
+func (c Client) GetBootstrapData() responses.BootstrapResponse {
 	var response responses.BootstrapResponse
-	err := request("GET", "https://fantasy.premierleague.com/api/bootstrap-static/", &response)
+	err := request("GET", "https://fantasy.premierleague.com/api/bootstrap-static/", &response, *c.Fpl)
 
 	if err != nil {
 		log.Fatal(err)
@@ -23,9 +37,9 @@ func GetBootstrapData() responses.BootstrapResponse {
 }
 
 // GetFixtures returns the fixtures for a specified gameweek
-func GetFixtures() responses.FixturesResponse {
+func (c Client) GetFixtures() responses.FixturesResponse {
 	var response responses.FixturesResponse = make(responses.FixturesResponse, 0)
-	err := request("GET", "https://fantasy.premierleague.com/api/fixtures/", &response)
+	err := request("GET", "https://fantasy.premierleague.com/api/fixtures/", &response, *c.Fpl)
 
 	if err != nil {
 		log.Fatal(err)
@@ -35,10 +49,10 @@ func GetFixtures() responses.FixturesResponse {
 }
 
 // GetPoints returns the points your team has for a specified gameweek
-func GetPoints(teamID int, gameweek int) responses.PointsResponse {
+func (c Client) GetPoints(teamID int, gameweek int) responses.PointsResponse {
 	var response responses.PointsResponse
 
-	err := request("GET", "https://fantasy.premierleague.com/api/entry/"+strconv.Itoa(teamID)+"/event/"+strconv.Itoa(gameweek)+"/picks/", &response)
+	err := request("GET", "https://fantasy.premierleague.com/api/entry/"+strconv.Itoa(teamID)+"/event/"+strconv.Itoa(gameweek)+"/picks/", &response, *c.Fpl)
 
 	if err != nil {
 		log.Fatal(err)
@@ -48,10 +62,10 @@ func GetPoints(teamID int, gameweek int) responses.PointsResponse {
 }
 
 // GetLive returns player data for that specific gameweek
-func GetLive(gameweek int) responses.LiveResponse {
+func (c Client) GetLive(gameweek int) responses.LiveResponse {
 	var response responses.LiveResponse
 
-	err := request("GET", "https://fantasy.premierleague.com/api/event/"+strconv.Itoa(gameweek)+"/live/", &response)
+	err := request("GET", "https://fantasy.premierleague.com/api/event/"+strconv.Itoa(gameweek)+"/live/", &response, *c.Fpl)
 
 	if err != nil {
 		log.Fatal(err)
@@ -61,10 +75,10 @@ func GetLive(gameweek int) responses.LiveResponse {
 }
 
 // GetHistory returns the managers history for his team
-func GetHistory(teamID int) responses.HistoryResponse {
+func (c Client) GetHistory(teamID int) responses.HistoryResponse {
 	var response responses.HistoryResponse
 
-	err := request("GET", "https://fantasy.premierleague.com/api/entry/"+strconv.Itoa(teamID)+"/history/", &response)
+	err := request("GET", "https://fantasy.premierleague.com/api/entry/"+strconv.Itoa(teamID)+"/history/", &response, *c.Fpl)
 
 	if err != nil {
 		log.Fatal(err)
@@ -74,10 +88,10 @@ func GetHistory(teamID int) responses.HistoryResponse {
 }
 
 // GetDetails returns the details around the manager, more specifically this current season
-func GetDetails(teamID int) responses.DetailsResponse {
+func (c Client) GetDetails(teamID int) responses.DetailsResponse {
 	var response responses.DetailsResponse
 
-	err := request("GET", "https://fantasy.premierleague.com/api/entry/"+strconv.Itoa(teamID)+"/", &response)
+	err := request("GET", "https://fantasy.premierleague.com/api/entry/"+strconv.Itoa(teamID)+"/", &response, *c.Fpl)
 
 	if err != nil {
 		log.Fatal(err)
@@ -86,8 +100,7 @@ func GetDetails(teamID int) responses.DetailsResponse {
 	return response
 }
 
-func request(method string, endpoint string, response interface{}) error {
-	var client = &http.Client{}
+func request(method string, endpoint string, response interface{}, client http.Client) error {
 	req, err := http.NewRequest(method, endpoint, nil)
 
 	req.Header.Add("User-Agent", "")
