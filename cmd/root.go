@@ -15,13 +15,7 @@ import (
 var cfgFile string
 
 // rootCmd represents the base command when called without any subcommands
-var rootCmd = &cobra.Command{
-	Use:   "fpl",
-	Short: "A CLI tool for retrieving FPL data",
-	// Uncomment the following line if your bare application
-	// has an action associated with it:
-	// Run: func(cmd *cobra.Command, args []string) { },
-}
+var rootCmd = BuildRootCommand()
 
 // Execute adds all child commands to the root command and sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
@@ -29,16 +23,25 @@ func Execute() {
 	cobra.CheckErr(rootCmd.Execute())
 }
 
-func init() {
+// BuildRootCommand returns the root cobra command
+func BuildRootCommand() *cobra.Command {
 	cobra.OnInitialize(initConfig)
 
 	// Here you will define your flags and configuration settings.
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
 
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.fpl.yaml)")
-	rootCmd.PersistentFlags().StringP("gameweek", "g", "", "The gameweek you wish to see details for")
-	err := viper.BindPFlag("gameweek", rootCmd.PersistentFlags().Lookup("gameweek"))
+	var cmd = &cobra.Command{
+		Use:   "fpl",
+		Short: "A CLI tool for retrieving FPL data",
+		// Uncomment the following line if your bare application
+		// has an action associated with it:
+		// Run: func(cmd *cobra.Command, args []string) { },
+	}
+
+	cmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.fpl.yaml)")
+	cmd.PersistentFlags().StringP("gameweek", "g", "", "The gameweek you wish to see details for")
+	err := viper.BindPFlag("gameweek", cmd.PersistentFlags().Lookup("gameweek"))
 	var fplClient api.FplAPI = api.New()
 
 	if err != nil {
@@ -46,15 +49,18 @@ func init() {
 	}
 
 	// Add all the commands we want
-	rootCmd.AddCommand(BuildDetailsCommand(&fplClient))
-	rootCmd.AddCommand(BuildFixturesCommand(&fplClient))
-	rootCmd.AddCommand(BuildHistoryCommand(&fplClient))
-	rootCmd.AddCommand(BuildPointsCommand(&fplClient))
-	rootCmd.AddCommand(BuildRivalsCommand(&fplClient))
+	cmd.AddCommand(
+		BuildDetailsCommand(&fplClient),
+		BuildFixturesCommand(&fplClient),
+		BuildHistoryCommand(&fplClient),
+		BuildPointsCommand(&fplClient),
+		BuildRivalsCommand(&fplClient))
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
-	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	cmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+
+	return cmd
 }
 
 // initConfig reads in config file and ENV variables if set.
