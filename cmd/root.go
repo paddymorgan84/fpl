@@ -32,8 +32,16 @@ func BuildRootCommand() *cobra.Command {
 	// will be global for your application.
 
 	var cmd = &cobra.Command{
-		Use:   "fpl",
-		Short: "A CLI tool for retrieving FPL data",
+		Use: "fpl",
+		Short: `
+		________    _______      ___
+		|   ____|   |   _  \     |  |
+		|  |__      |  |_)  |    |  |
+		|   __|     |   ___/     |  |
+		|  |        |  |         |  -----.
+		|__|        |__|         |_______|
+
+		A CLI tool for retrieving FPL data`,
 		// Uncomment the following line if your bare application
 		// has an action associated with it:
 		// Run: func(cmd *cobra.Command, args []string) { },
