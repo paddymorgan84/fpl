@@ -34,7 +34,7 @@ func getRivals(c api.FplAPI) {
 
 	bootstrap := c.GetBootstrapData()
 	gameweek := helpers.GetCurrentGameweek(bootstrap)
-	live := c.GetLive(gameweek)
+	live := c.GetGameweekLiveScores(gameweek)
 
 	for _, rival := range viper.GetStringSlice("rivals") {
 		teamID, err := strconv.Atoi(rival)
@@ -43,8 +43,8 @@ func getRivals(c api.FplAPI) {
 			log.Fatal(err)
 		}
 
-		var points = c.GetPoints(teamID, gameweek)
-		detailsResponse := c.GetDetails(teamID)
+		var points = c.GetGameweekPoints(teamID, gameweek)
+		detailsResponse := c.GetManagerDetails(teamID)
 		ui.PrintRivalPoints(bootstrap, live, points, detailsResponse)
 	}
 }

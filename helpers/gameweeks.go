@@ -12,7 +12,7 @@ import (
 const lastGameweek int = 38
 
 // GetCurrentGameweek uses the bootstrap data to determine which gameweek is currently active in the game. If all are finished, defaults to 38
-func GetCurrentGameweek(bootstrap responses.BootstrapResponse) int {
+func GetCurrentGameweek(bootstrap responses.BootstrapData) int {
 	gameweekParameter := viper.GetString("gameweek")
 
 	if gameweekParameter == "" {

@@ -33,7 +33,7 @@ func BuildHistoryCommand(c *api.FplAPI) *cobra.Command {
 
 func getHistory(c api.FplAPI) {
 	teamID := helpers.GetTeamID(historyArgs.TeamID)
-	historyResponse := c.GetHistory(teamID)
+	historyResponse := c.GetManagerHistory(teamID)
 
 	ui.PrintHeader("This season")
 	ui.PrintSeasonDetails(historyResponse)

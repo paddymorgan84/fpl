@@ -2,8 +2,8 @@ package responses
 
 import "time"
 
-// DetailsResponse is the response returned by the FPL API when requesting from the manager details endpoint
-type DetailsResponse struct {
+// ManagerDetails is the response returned by the FPL API when requesting from the manager details endpoint
+type ManagerDetails struct {
 	ID                         int       `json:"id"`
 	JoinedTime                 time.Time `json:"joined_time"`
 	StartedEvent               int       `json:"started_event"`

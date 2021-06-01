@@ -1,7 +1,7 @@
 package responses
 
-// LiveResponse is the response returned by the FPL API when the live endpoint is used
-type LiveResponse struct {
+// GameweekLiveScores is the response returned by the FPL API to get the latest points for all players
+type GameweekLiveScores struct {
 	Players []PlayerLive `json:"elements"`
 }
 

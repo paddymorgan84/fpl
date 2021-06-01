@@ -25,7 +25,7 @@ func BuildFixturesCommand(c *api.FplAPI) *cobra.Command {
 func getFixtures(c api.FplAPI) {
 	var bootstrap = c.GetBootstrapData()
 	gameweek := helpers.GetCurrentGameweek(bootstrap)
-	var fixtures = c.GetFixtures()
+	var fixtures = c.GetGameweekFixtures(gameweek)
 
 	ui.PrintHeader(fmt.Sprintf("Gameweek %d fixtures", gameweek))
 	ui.PrintGameweekFixtures(bootstrap, fixtures, gameweek)

@@ -1,7 +1,7 @@
 package responses
 
-// PointsResponse is the response returned by the FPL APi when the picks endpoint is called
-type PointsResponse struct {
+// GameweekPoints is the response returned by the FPL API when the picks endpoint is called
+type GameweekPoints struct {
 	ActiveChip    interface{}    `json:"active_chip"`
 	AutomaticSubs []AutomaticSub `json:"automatic_subs"`
 	EntryHistory  EntryHistory   `json:"entry_history"`

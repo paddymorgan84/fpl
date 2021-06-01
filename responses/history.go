@@ -2,8 +2,8 @@ package responses
 
 import "time"
 
-// HistoryResponse is the response returned by the FPL API when the history endpoint is called
-type HistoryResponse struct {
+// ManagerHistory is the response returned by the FPL API when the history endpoint is called
+type ManagerHistory struct {
 	Current []HistoricGameweek `json:"current"`
 	Past    []PastSeason       `json:"past"`
 	Chips   []Chip             `json:"chips"`

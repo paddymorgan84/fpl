@@ -15,7 +15,7 @@ func DetermineCaptainFlag(pick responses.Pick) string {
 }
 
 // GetPlayerName will cross reference the pick with the bootstrap data to determine the players web appropriate name
-func GetPlayerName(pick responses.Pick, bootstrap responses.BootstrapResponse) string {
+func GetPlayerName(pick responses.Pick, bootstrap responses.BootstrapData) string {
 	for _, player := range bootstrap.Players {
 		if player.ID == pick.Element {
 			return player.WebName
@@ -26,7 +26,7 @@ func GetPlayerName(pick responses.Pick, bootstrap responses.BootstrapResponse) s
 }
 
 // GetPoints will cross reference the pick with the live data to return the players points (with the captaincy multiplier factored in)
-func GetPoints(pick responses.Pick, live responses.LiveResponse) int {
+func GetPoints(pick responses.Pick, live responses.GameweekLiveScores) int {
 	for _, player := range live.Players {
 		if pick.Element == player.ID {
 			if pick.Multiplier == 0 {

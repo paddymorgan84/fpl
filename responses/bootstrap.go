@@ -2,8 +2,8 @@ package responses
 
 import "time"
 
-// BootstrapResponse is the response returned when you request bootstrap data from the fpl API
-type BootstrapResponse struct {
+// BootstrapData is the response returned when you request bootstrap data from the fpl API
+type BootstrapData struct {
 	Gameweeks    []Gameweek   `json:"events"`
 	GameSettings GameSettings `json:"game_settings"`
 	Phases       []Phase      `json:"phases"`

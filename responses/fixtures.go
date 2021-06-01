@@ -2,8 +2,8 @@ package responses
 
 import "time"
 
-// FixturesResponse is the response returned by the FPL API when requesting from the fixtures endpoint
-type FixturesResponse []struct {
+// GameweekFixtures is the response returned by the FPL API when requesting from the fixtures endpoint
+type GameweekFixtures []struct {
 	Code                 int       `json:"code"`
 	Event                int       `json:"event"`
 	Finished             bool      `json:"finished"`

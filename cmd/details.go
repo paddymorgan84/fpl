@@ -32,7 +32,8 @@ func BuildDetailsCommand(c *api.FplAPI) *cobra.Command {
 
 func getDetails(c api.FplAPI) {
 	teamID := helpers.GetTeamID(detailsArgs.TeamID)
-	detailsResponse := c.GetDetails(teamID)
+	detailsResponse := c.GetManagerDetails(teamID)
+	c.GetPlayerDetails(24)
 
 	ui.PrintHeader("Manager Details")
 	ui.PrintManagerDetails(detailsResponse)

@@ -25,8 +25,8 @@ func New() Client {
 }
 
 // GetBootstrapData returns all the bootstrap data that serves any additional calls
-func (c Client) GetBootstrapData() responses.BootstrapResponse {
-	var response responses.BootstrapResponse
+func (c Client) GetBootstrapData() responses.BootstrapData {
+	var response responses.BootstrapData
 	err := request("GET", "https://fantasy.premierleague.com/api/bootstrap-static/", &response, *c.Fpl)
 
 	if err != nil {
@@ -36,9 +36,21 @@ func (c Client) GetBootstrapData() responses.BootstrapResponse {
 	return response
 }
 
-// GetFixtures returns the fixtures for a specified gameweek
-func (c Client) GetFixtures() responses.FixturesResponse {
-	var response responses.FixturesResponse = make(responses.FixturesResponse, 0)
+// GetGameweekFixtures returns the fixtures for a specified gameweek
+func (c Client) GetGameweekFixtures(gameweek int) responses.GameweekFixtures {
+	var response responses.GameweekFixtures = make(responses.GameweekFixtures, 0)
+	err := request("GET", "https://fantasy.premierleague.com/api/fixtures/?event="+strconv.Itoa(gameweek), &response, *c.Fpl)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return response
+}
+
+// GetAllFixtures returns the fixtures for every gameweek
+func (c Client) GetAllFixtures() responses.GameweekFixtures {
+	var response responses.GameweekFixtures = make(responses.GameweekFixtures, 0)
 	err := request("GET", "https://fantasy.premierleague.com/api/fixtures/", &response, *c.Fpl)
 
 	if err != nil {
@@ -48,9 +60,9 @@ func (c Client) GetFixtures() responses.FixturesResponse {
 	return response
 }
 
-// GetPoints returns the points your team has for a specified gameweek
-func (c Client) GetPoints(teamID int, gameweek int) responses.PointsResponse {
-	var response responses.PointsResponse
+// GetGameweekPoints returns the points your team has for a specified gameweek
+func (c Client) GetGameweekPoints(teamID int, gameweek int) responses.GameweekPoints {
+	var response responses.GameweekPoints
 
 	err := request("GET", "https://fantasy.premierleague.com/api/entry/"+strconv.Itoa(teamID)+"/event/"+strconv.Itoa(gameweek)+"/picks/", &response, *c.Fpl)
 
@@ -61,9 +73,9 @@ func (c Client) GetPoints(teamID int, gameweek int) responses.PointsResponse {
 	return response
 }
 
-// GetLive returns player data for that specific gameweek
-func (c Client) GetLive(gameweek int) responses.LiveResponse {
-	var response responses.LiveResponse
+// GetGameweekLiveScores returns player data for that specific gameweek
+func (c Client) GetGameweekLiveScores(gameweek int) responses.GameweekLiveScores {
+	var response responses.GameweekLiveScores
 
 	err := request("GET", "https://fantasy.premierleague.com/api/event/"+strconv.Itoa(gameweek)+"/live/", &response, *c.Fpl)
 
@@ -74,9 +86,9 @@ func (c Client) GetLive(gameweek int) responses.LiveResponse {
 	return response
 }
 
-// GetHistory returns the managers history for his team
-func (c Client) GetHistory(teamID int) responses.HistoryResponse {
-	var response responses.HistoryResponse
+// GetManagerHistory returns the managers history for his team
+func (c Client) GetManagerHistory(teamID int) responses.ManagerHistory {
+	var response responses.ManagerHistory
 
 	err := request("GET", "https://fantasy.premierleague.com/api/entry/"+strconv.Itoa(teamID)+"/history/", &response, *c.Fpl)
 
@@ -87,11 +99,24 @@ func (c Client) GetHistory(teamID int) responses.HistoryResponse {
 	return response
 }
 
-// GetDetails returns the details around the manager, more specifically this current season
-func (c Client) GetDetails(teamID int) responses.DetailsResponse {
-	var response responses.DetailsResponse
+// GetManagerDetails returns the details around the manager, more specifically this current season
+func (c Client) GetManagerDetails(teamID int) responses.ManagerDetails {
+	var response responses.ManagerDetails
 
 	err := request("GET", "https://fantasy.premierleague.com/api/entry/"+strconv.Itoa(teamID)+"/", &response, *c.Fpl)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return response
+}
+
+// GetPlayerDetails returns the details for a specific player, including current and past seasons
+func (c Client) GetPlayerDetails(playerID int) responses.PlayerDetails {
+	var response responses.PlayerDetails
+
+	err := request("GET", "https://fantasy.premierleague.com/api/element-summary/"+strconv.Itoa(playerID)+"/", &response, *c.Fpl)
 
 	if err != nil {
 		log.Fatal(err)

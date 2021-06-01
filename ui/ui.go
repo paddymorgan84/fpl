@@ -29,7 +29,7 @@ func PrintHeader(title string) {
 }
 
 // PrintTeamPoints prints the points the team has
-func PrintTeamPoints(bootstrap responses.BootstrapResponse, live responses.LiveResponse, points responses.PointsResponse) {
+func PrintTeamPoints(bootstrap responses.BootstrapData, live responses.GameweekLiveScores, points responses.GameweekPoints) {
 	tr := ansiterm.NewTabWriter(os.Stdout, 0, 0, 1, ' ', tabwriter.FilterHTML)
 
 	for _, pick := range points.Picks {
@@ -46,7 +46,7 @@ func PrintTeamPoints(bootstrap responses.BootstrapResponse, live responses.LiveR
 }
 
 // PrintRivalPoints prints out the details for the rivals given the teamID in details
-func PrintRivalPoints(bootstrap responses.BootstrapResponse, live responses.LiveResponse, points responses.PointsResponse, details responses.DetailsResponse) {
+func PrintRivalPoints(bootstrap responses.BootstrapData, live responses.GameweekLiveScores, points responses.GameweekPoints, details responses.ManagerDetails) {
 	p := message.NewPrinter(language.English)
 	tr := ansiterm.NewTabWriter(os.Stdout, 0, 0, 1, ' ', tabwriter.FilterHTML)
 
@@ -76,7 +76,7 @@ func PrintRivalPoints(bootstrap responses.BootstrapResponse, live responses.Live
 }
 
 // PrintManagerDetails prints the summary details for a manager
-func PrintManagerDetails(details responses.DetailsResponse) {
+func PrintManagerDetails(details responses.ManagerDetails) {
 	p := message.NewPrinter(language.English)
 	tr := ansiterm.NewTabWriter(os.Stdout, 0, 0, 1, ' ', tabwriter.FilterHTML)
 
@@ -108,7 +108,7 @@ func PrintManagerDetails(details responses.DetailsResponse) {
 }
 
 // PrintClassicLeagues prints all classic leagues and the current rank for each
-func PrintClassicLeagues(details responses.DetailsResponse) {
+func PrintClassicLeagues(details responses.ManagerDetails) {
 	p := message.NewPrinter(language.English)
 	tr := ansiterm.NewTabWriter(os.Stdout, 0, 0, 1, ' ', tabwriter.FilterHTML)
 
@@ -126,7 +126,7 @@ func PrintClassicLeagues(details responses.DetailsResponse) {
 }
 
 // PrintGlobalLeagues prints all global leagues and the current rank for each
-func PrintGlobalLeagues(detailsResponse responses.DetailsResponse) {
+func PrintGlobalLeagues(detailsResponse responses.ManagerDetails) {
 	p := message.NewPrinter(language.English)
 	tr := ansiterm.NewTabWriter(os.Stdout, 0, 0, 1, ' ', tabwriter.FilterHTML)
 
@@ -144,7 +144,7 @@ func PrintGlobalLeagues(detailsResponse responses.DetailsResponse) {
 }
 
 // PrintTransfersAndFinance prints details for a teamsd transfers, value and money in the bank
-func PrintTransfersAndFinance(detailsResponse responses.DetailsResponse) {
+func PrintTransfersAndFinance(detailsResponse responses.ManagerDetails) {
 	p := message.NewPrinter(language.English)
 	tr := ansiterm.NewTabWriter(os.Stdout, 0, 0, 1, ' ', tabwriter.FilterHTML)
 
@@ -170,7 +170,7 @@ func PrintTransfersAndFinance(detailsResponse responses.DetailsResponse) {
 }
 
 // PrintGameweekFixtures prints the fixtures for the specified gameweek
-func PrintGameweekFixtures(bootstrap responses.BootstrapResponse, fixtures responses.FixturesResponse, gameweek int) {
+func PrintGameweekFixtures(bootstrap responses.BootstrapData, fixtures responses.GameweekFixtures, gameweek int) {
 	tr := ansiterm.NewTabWriter(os.Stdout, 0, 0, 1, ' ', tabwriter.FilterHTML)
 	for _, fixture := range fixtures {
 		if fixture.Event == gameweek {
@@ -192,7 +192,7 @@ func PrintGameweekFixtures(bootstrap responses.BootstrapResponse, fixtures respo
 }
 
 // PrintSeasonDetails prints a teams current season details for each gameweek
-func PrintSeasonDetails(history responses.HistoryResponse) {
+func PrintSeasonDetails(history responses.ManagerHistory) {
 	p := message.NewPrinter(language.English)
 	tr := ansiterm.NewTabWriter(os.Stdout, 0, 0, 1, ' ', tabwriter.FilterHTML)
 
@@ -228,7 +228,7 @@ func PrintSeasonDetails(history responses.HistoryResponse) {
 }
 
 // PrintChipDetails prints details around what chips have been used
-func PrintChipDetails(history responses.HistoryResponse) {
+func PrintChipDetails(history responses.ManagerHistory) {
 	p := message.NewPrinter(language.English)
 	tr := ansiterm.NewTabWriter(os.Stdout, 0, 0, 1, ' ', tabwriter.FilterHTML)
 
@@ -246,7 +246,7 @@ func PrintChipDetails(history responses.HistoryResponse) {
 }
 
 // PrintPreviousSeasonDetails prints a teams record from past seasons
-func PrintPreviousSeasonDetails(history responses.HistoryResponse) {
+func PrintPreviousSeasonDetails(history responses.ManagerHistory) {
 	p := message.NewPrinter(language.English)
 	tr := ansiterm.NewTabWriter(os.Stdout, 0, 0, 1, ' ', tabwriter.FilterHTML)
 

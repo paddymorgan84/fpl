@@ -36,8 +36,8 @@ func getPoints(c api.FplAPI) {
 	teamID := helpers.GetTeamID(pointsArgs.TeamID)
 	var bootstrap = c.GetBootstrapData()
 	gameweek := helpers.GetCurrentGameweek(bootstrap)
-	var points = c.GetPoints(teamID, gameweek)
-	var live = c.GetLive(gameweek)
+	var points = c.GetGameweekPoints(teamID, gameweek)
+	var live = c.GetGameweekLiveScores(gameweek)
 
 	ui.PrintHeader(fmt.Sprintf("Gameweek %d points", gameweek))
 	ui.PrintTeamPoints(bootstrap, live, points)
