@@ -24,7 +24,7 @@
 ## Introduction
 
 ![Go](https://github.com/paddymorgan84/fpl/workflows/fpl/badge.svg)
-[![Go Report Card](https://goreportcard.com/badge/github.com/paddymorgan84/fpl?style=flat-square)](https://goreportcard.com/report/github.com/paddymorgan84/fpl)
+[![Go Report Card](https://goreportcard.com/badge/github.com/paddymorgan84/fpl)](https://goreportcard.com/report/github.com/paddymorgan84/fpl)
 
 `fpl` is a CLI tool written in Go that pulls information from the Fantasy Premier League API and presents it in a readable format.
 
