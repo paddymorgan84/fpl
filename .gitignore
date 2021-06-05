@@ -1,2 +1,9 @@
-fpl
+# npm
 node_modules
+
+# go
+c.out
+coverage.out
+coverage.html
+fpl
+**/mock_*.go

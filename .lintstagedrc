@@ -8,6 +8,7 @@
     "make vet",
     "make lint-go",
     "make security",
-    "make build"
+    "make build",
+    "make test"
   ]
 }

@@ -2,49 +2,73 @@ package cmd
 
 import (
 	"fmt"
-	"log"
 	"strconv"
 
 	"github.com/paddymorgan84/fpl/api"
 	"github.com/paddymorgan84/fpl/helpers"
 	"github.com/paddymorgan84/fpl/ui"
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 // BuildRivalsCommand returns the rivals cobra command
-func BuildRivalsCommand(c *api.FplAPI) *cobra.Command {
+func BuildRivalsCommand(c api.FplAPI, config helpers.ConfigReader) *cobra.Command {
 	var cmd = &cobra.Command{
 		Use:   "rivals",
 		Short: "Show the points for all of your rivals (specified in config) for a specified gameweek",
-		Run: func(cmd *cobra.Command, args []string) {
-			getRivals(*c)
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return getRivals(c, config)
 		},
 	}
 
 	return cmd
 }
 
-func getRivals(c api.FplAPI) {
+func getRivals(c api.FplAPI, config helpers.ConfigReader) error {
 	ui.PrintHeader("Rivals")
 
-	if !viper.IsSet("rivals") {
+	if !config.IsSet("rivals") {
 		fmt.Println("No rivals specified. Update config for this to work.")
 	}
 
-	bootstrap := c.GetBootstrapData()
-	gameweek := helpers.GetCurrentGameweek(bootstrap)
-	live := c.GetGameweekLiveScores(gameweek)
+	bootstrap, err := c.GetBootstrapData()
 
-	for _, rival := range viper.GetStringSlice("rivals") {
+	if err != nil {
+		return err
+	}
+
+	gameweek, err := helpers.GetCurrentGameweek(bootstrap.Gameweeks, config)
+
+	if err != nil {
+		return err
+	}
+
+	live, err := c.GetGameweekLiveScores(gameweek)
+
+	if err != nil {
+		return err
+	}
+
+	for _, rival := range config.GetStringSlice("rivals") {
 		teamID, err := strconv.Atoi(rival)
 
 		if err != nil {
-			log.Fatal(err)
+			return err
 		}
 
-		var points = c.GetGameweekPoints(teamID, gameweek)
-		detailsResponse := c.GetManagerDetails(teamID)
+		points, err := c.GetGameweekPoints(teamID, gameweek)
+
+		if err != nil {
+			return err
+		}
+
+		detailsResponse, err := c.GetManagerDetails(teamID)
+
+		if err != nil {
+			return err
+		}
+
 		ui.PrintRivalPoints(bootstrap, live, points, detailsResponse)
 	}
+
+	return err
 }

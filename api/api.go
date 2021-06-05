@@ -6,12 +6,14 @@ import (
 
 // FplAPI is the interface for the FPL API
 type FplAPI interface {
-	GetBootstrapData() responses.BootstrapData
-	GetAllFixtures() responses.GameweekFixtures
-	GetGameweekFixtures(gameweek int) responses.GameweekFixtures
-	GetGameweekPoints(teamID int, gameweek int) responses.GameweekPoints
-	GetGameweekLiveScores(gameweek int) responses.GameweekLiveScores
-	GetManagerHistory(teamID int) responses.ManagerHistory
-	GetManagerDetails(teamID int) responses.ManagerDetails
-	GetPlayerDetails(playerID int) responses.PlayerDetails
+	GetBootstrapData() (responses.BootstrapData, error)
+	GetAllFixtures() (responses.GameweekFixtures, error)
+	GetGameweekFixtures(gameweek int) (responses.GameweekFixtures, error)
+	GetGameweekPoints(teamID int, gameweek int) (responses.GameweekPoints, error)
+	GetGameweekLiveScores(gameweek int) (responses.GameweekLiveScores, error)
+	GetManagerHistory(teamID int) (responses.ManagerHistory, error)
+	GetManagerDetails(teamID int) (responses.ManagerDetails, error)
+	GetPlayerDetails(playerID int) (responses.PlayerDetails, error)
 }
+
+//go:generate mockgen -source=api.go -package=api -destination=mock_api.go

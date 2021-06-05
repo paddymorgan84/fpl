@@ -47,6 +47,7 @@ install-go: ## Install the local go dependencies
 	@echo "📡 Installing local go dependencies..."
 	go install github.com/securego/gosec/cmd/gosec@master
 	go install golang.org/x/lint/golint@master
+	go install github.com/golang/mock/mockgen@master
 	go get ./...
 	@echo "✔️  Done"
 
@@ -77,6 +78,19 @@ build: ## Build the application
 	go build .
 	@echo "✔️  Done"
 
+.PHONY: generate-mocks
+generate-mocks:
+	@echo "🔩 Generating mocks..."
+	go generate -x ./...
+	@echo "✔️  Done"
+
+.PHONY: test
+test: generate-mocks ## Run the unit tests
+	@echo "🧪 Running tests..."
+	go test ./... -coverprofile=coverage.out
+	go tool cover -html=coverage.out -o coverage.html
+	@echo "✔️  Done"
+
 .PHONY: update-toc
 update-toc: ## Update the README table of contents
 	@echo "📑 Updating table of contents..."
@@ -97,4 +111,4 @@ spell-check: ## Spellcheck markdown files
 
 
 .PHONY: all
-all: clean install spell-check vet lint security build ## Run everything
+all: clean install spell-check vet lint security build test ## Run everything

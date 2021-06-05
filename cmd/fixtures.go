@@ -10,23 +10,39 @@ import (
 )
 
 // BuildFixturesCommand returns the fixtures cobra command
-func BuildFixturesCommand(c *api.FplAPI) *cobra.Command {
+func BuildFixturesCommand(c api.FplAPI, config helpers.ConfigReader) *cobra.Command {
 	var cmd = &cobra.Command{
 		Use:   "fixtures",
 		Short: "Get the fixtures for a specific gameweek",
-		Run: func(cmd *cobra.Command, args []string) {
-			getFixtures(*c)
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return getFixtures(c, config)
 		},
 	}
 
 	return cmd
 }
 
-func getFixtures(c api.FplAPI) {
-	var bootstrap = c.GetBootstrapData()
-	gameweek := helpers.GetCurrentGameweek(bootstrap)
-	var fixtures = c.GetGameweekFixtures(gameweek)
+func getFixtures(c api.FplAPI, config helpers.ConfigReader) error {
+	var bootstrap, err = c.GetBootstrapData()
+
+	if err != nil {
+		return err
+	}
+
+	gameweek, err := helpers.GetCurrentGameweek(bootstrap.Gameweeks, config)
+
+	if err != nil {
+		return err
+	}
+
+	fixtures, err := c.GetGameweekFixtures(gameweek)
+
+	if err != nil {
+		return err
+	}
 
 	ui.PrintHeader(fmt.Sprintf("Gameweek %d fixtures", gameweek))
 	ui.PrintGameweekFixtures(bootstrap, fixtures, gameweek)
+
+	return err
 }

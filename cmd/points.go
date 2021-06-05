@@ -17,12 +17,12 @@ type PointsArgs struct {
 var pointsArgs PointsArgs
 
 // BuildPointsCommand returns the points cobra command
-func BuildPointsCommand(c *api.FplAPI) *cobra.Command {
+func BuildPointsCommand(c api.FplAPI, config helpers.ConfigReader) *cobra.Command {
 	var cmd = &cobra.Command{
 		Use:   "points",
 		Short: "Get the points for a specified gameweek (defaults to latest active gameweek)",
-		Run: func(cmd *cobra.Command, args []string) {
-			getPoints(*c)
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return getPoints(c, config)
 		},
 	}
 
@@ -32,13 +32,39 @@ func BuildPointsCommand(c *api.FplAPI) *cobra.Command {
 	return cmd
 }
 
-func getPoints(c api.FplAPI) {
-	teamID := helpers.GetTeamID(pointsArgs.TeamID)
-	var bootstrap = c.GetBootstrapData()
-	gameweek := helpers.GetCurrentGameweek(bootstrap)
-	var points = c.GetGameweekPoints(teamID, gameweek)
-	var live = c.GetGameweekLiveScores(gameweek)
+func getPoints(c api.FplAPI, config helpers.ConfigReader) error {
+	teamID, err := helpers.GetTeamID(pointsArgs.TeamID, config)
+
+	if err != nil {
+		return err
+	}
+
+	bootstrap, err := c.GetBootstrapData()
+
+	if err != nil {
+		return err
+	}
+
+	gameweek, err := helpers.GetCurrentGameweek(bootstrap.Gameweeks, config)
+
+	if err != nil {
+		return err
+	}
+
+	points, err := c.GetGameweekPoints(teamID, gameweek)
+
+	if err != nil {
+		return err
+	}
+
+	live, err := c.GetGameweekLiveScores(gameweek)
+
+	if err != nil {
+		return err
+	}
 
 	ui.PrintHeader(fmt.Sprintf("Gameweek %d points", gameweek))
 	ui.PrintTeamPoints(bootstrap, live, points)
+
+	return err
 }

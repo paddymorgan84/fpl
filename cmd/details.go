@@ -15,12 +15,12 @@ type DetailsArgs struct {
 var detailsArgs DetailsArgs
 
 // BuildDetailsCommand returns the details cobra command
-func BuildDetailsCommand(c *api.FplAPI) *cobra.Command {
+func BuildDetailsCommand(c api.FplAPI, config helpers.ConfigReader) *cobra.Command {
 	var cmd = &cobra.Command{
 		Use:   "details",
 		Short: "Returns details of manager for current season, e.g. league standings, cash in the bank, overall points etc",
-		Run: func(cmd *cobra.Command, args []string) {
-			getDetails(*c)
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return getDetails(c, config)
 		},
 	}
 
@@ -30,10 +30,18 @@ func BuildDetailsCommand(c *api.FplAPI) *cobra.Command {
 	return cmd
 }
 
-func getDetails(c api.FplAPI) {
-	teamID := helpers.GetTeamID(detailsArgs.TeamID)
-	detailsResponse := c.GetManagerDetails(teamID)
-	c.GetPlayerDetails(24)
+func getDetails(c api.FplAPI, config helpers.ConfigReader) error {
+	teamID, err := helpers.GetTeamID(detailsArgs.TeamID, config)
+
+	if err != nil {
+		return err
+	}
+
+	detailsResponse, err := c.GetManagerDetails(teamID)
+
+	if err != nil {
+		return err
+	}
 
 	ui.PrintHeader("Manager Details")
 	ui.PrintManagerDetails(detailsResponse)
@@ -46,4 +54,6 @@ func getDetails(c api.FplAPI) {
 
 	ui.PrintHeader("Transfers & Finance")
 	ui.PrintTransfersAndFinance(detailsResponse)
+
+	return err
 }
