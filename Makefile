@@ -52,7 +52,7 @@ install-go: ## Install the local go dependencies
 	@echo "✔️  Done"
 
 .PHONY: vet
-vet: ## Vet the code
+vet: generate-mocks ## Vet the code
 	@echo "⚡ Vetting the code..."
 	go vet -v ./...
 	@echo "✔️  Done"
