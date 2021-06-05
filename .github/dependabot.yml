@@ -23,3 +23,11 @@ updates:
       interval: "weekly"
     commit-message:
       prefix: "gomod"
+
+  # Maintain dependencies for npm
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    commit-message:
+      prefix: "npm"
