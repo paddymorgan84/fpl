@@ -17,6 +17,7 @@
 - [Configuration](#configuration)
   - [Configuring your team ID](#configuring-your-team-id)
   - [Configuring your rivals](#configuring-your-rivals)
+- [Dockerfile](#dockerfile)
 - [Acknowledgements](#acknowledgements)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -101,6 +102,15 @@ rivals:
 ```
 
 You can obtain their FPL team id via the same method specified [above](#configuring-your-team-id).
+
+## Dockerfile
+
+If you have Docker installed, you can also run the tool using the Dockerfile provided:
+
+```bash
+docker build -t paddymorgan84/fpl .
+docker run --rm -t -v "${HOME}/.fpl.yaml":/root/.fpl.yaml paddymorgan84/fpl
+```
 
 ## Acknowledgements
 
