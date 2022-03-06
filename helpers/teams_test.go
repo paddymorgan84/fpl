@@ -32,7 +32,9 @@ func TestGetTeamID(t *testing.T) {
 
 		reader.EXPECT().GetInt("team-id").Return(table.configReaderValue).AnyTimes()
 
-		actualResult, err := GetTeamID(table.teamID, reader)
+		parser := new(FplTeamsParser)
+
+		actualResult, err := parser.GetTeamID(table.teamID, reader)
 
 		if err != nil && !table.expectedError {
 			t.Fatalf("unexpected error: %v", err)
@@ -65,9 +67,10 @@ func TestGetTeam(t *testing.T) {
 	byteValue, _ := ioutil.ReadAll(jsonFile)
 	var bootstrapData responses.BootstrapData
 	json.Unmarshal(byteValue, &bootstrapData)
+	parser := new(FplTeamsParser)
 
 	for _, table := range tables {
-		var actualResult = GetTeam(table.teamID, bootstrapData)
+		var actualResult = parser.GetTeam(table.teamID, bootstrapData)
 
 		if actualResult != table.expectedName {
 			t.Errorf("expected: %s; got %s", table.expectedName, actualResult)
@@ -86,8 +89,10 @@ func TestCalculateMonetaryValue(t *testing.T) {
 		{0, 0.0},
 	}
 
+	parser := new(FplTeamsParser)
+
 	for _, table := range tables {
-		var actualResult = CalculateMonetaryValue(table.value)
+		var actualResult = parser.CalculateMonetaryValue(table.value)
 
 		if actualResult != table.expectedValue {
 			t.Errorf("expected: %v; got %v", table.expectedValue, actualResult)
@@ -115,7 +120,9 @@ func TestCalculateRankComparison(t *testing.T) {
 			EntryLastRank: table.oldRank,
 		}
 
-		var actualResult = CalculateRankComparison(league)
+		parser := new(FplTeamsParser)
+
+		var actualResult = parser.CalculateRankComparison(league)
 
 		if actualResult != table.expectedValue {
 			t.Errorf("expected: %v; got %v", table.expectedValue, actualResult)

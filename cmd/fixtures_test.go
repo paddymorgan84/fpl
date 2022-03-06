@@ -7,6 +7,7 @@ import (
 
 	"github.com/paddymorgan84/fpl/api"
 	"github.com/paddymorgan84/fpl/helpers"
+	"github.com/paddymorgan84/fpl/ui"
 )
 
 func TestBuildFixturesCommand(t *testing.T) {
@@ -15,8 +16,10 @@ func TestBuildFixturesCommand(t *testing.T) {
 
 	reader := helpers.NewMockConfigReader(ctrl)
 	fpl := api.NewMockFplAPI(ctrl)
+	teamsParser := helpers.NewMockTeamsParser(ctrl)
+	renderer := ui.NewMockRenderer(ctrl)
 
-	cmd := BuildFixturesCommand(fpl, reader)
+	cmd := BuildFixturesCommand(fpl, reader, teamsParser, renderer)
 
 	var expectedShort = "Get the fixtures for a specific gameweek"
 	if cmd.Short != expectedShort {

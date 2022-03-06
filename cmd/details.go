@@ -15,12 +15,12 @@ type DetailsArgs struct {
 var detailsArgs DetailsArgs
 
 // BuildDetailsCommand returns the details cobra command
-func BuildDetailsCommand(c api.FplAPI, config helpers.ConfigReader) *cobra.Command {
+func BuildDetailsCommand(c api.FplAPI, config helpers.ConfigReader, teamParser helpers.TeamsParser, renderer ui.Renderer) *cobra.Command {
 	var cmd = &cobra.Command{
 		Use:   "details",
 		Short: "Returns details of manager for current season, e.g. league standings, cash in the bank, overall points etc",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return getDetails(c, config)
+			return getDetails(c, config, teamParser, renderer)
 		},
 	}
 
@@ -30,8 +30,8 @@ func BuildDetailsCommand(c api.FplAPI, config helpers.ConfigReader) *cobra.Comma
 	return cmd
 }
 
-func getDetails(c api.FplAPI, config helpers.ConfigReader) error {
-	teamID, err := helpers.GetTeamID(detailsArgs.TeamID, config)
+func getDetails(c api.FplAPI, config helpers.ConfigReader, teamParser helpers.TeamsParser, renderer ui.Renderer) error {
+	teamID, err := teamParser.GetTeamID(detailsArgs.TeamID, config)
 
 	if err != nil {
 		return err
@@ -43,17 +43,17 @@ func getDetails(c api.FplAPI, config helpers.ConfigReader) error {
 		return err
 	}
 
-	ui.PrintHeader("Manager Details")
-	ui.PrintManagerDetails(detailsResponse)
+	renderer.PrintHeader("Manager Details")
+	renderer.PrintManagerDetails(detailsResponse)
 
-	ui.PrintHeader("Classic Leagues")
-	ui.PrintClassicLeagues(detailsResponse)
+	renderer.PrintHeader("Classic Leagues")
+	renderer.PrintClassicLeagues(detailsResponse, teamParser)
 
-	ui.PrintHeader("Global Leagues")
-	ui.PrintGlobalLeagues(detailsResponse)
+	renderer.PrintHeader("Global Leagues")
+	renderer.PrintGlobalLeagues(detailsResponse, teamParser)
 
-	ui.PrintHeader("Transfers & Finance")
-	ui.PrintTransfersAndFinance(detailsResponse)
+	renderer.PrintHeader("Transfers & Finance")
+	renderer.PrintTransfersAndFinance(detailsResponse, teamParser)
 
 	return err
 }

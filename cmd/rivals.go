@@ -11,20 +11,20 @@ import (
 )
 
 // BuildRivalsCommand returns the rivals cobra command
-func BuildRivalsCommand(c api.FplAPI, config helpers.ConfigReader) *cobra.Command {
+func BuildRivalsCommand(c api.FplAPI, config helpers.ConfigReader, renderer ui.Renderer) *cobra.Command {
 	var cmd = &cobra.Command{
 		Use:   "rivals",
 		Short: "Show the points for all of your rivals (specified in config) for a specified gameweek",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return getRivals(c, config)
+			return getRivals(c, config, renderer)
 		},
 	}
 
 	return cmd
 }
 
-func getRivals(c api.FplAPI, config helpers.ConfigReader) error {
-	ui.PrintHeader("Rivals")
+func getRivals(c api.FplAPI, config helpers.ConfigReader, renderer ui.Renderer) error {
+	renderer.PrintHeader("Rivals")
 
 	if !config.IsSet("rivals") {
 		fmt.Println("No rivals specified. Update config for this to work.")
@@ -67,7 +67,7 @@ func getRivals(c api.FplAPI, config helpers.ConfigReader) error {
 			return err
 		}
 
-		ui.PrintRivalPoints(bootstrap, live, points, detailsResponse)
+		renderer.PrintRivalPoints(bootstrap, live, points, detailsResponse)
 	}
 
 	return err

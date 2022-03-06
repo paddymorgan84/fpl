@@ -7,6 +7,7 @@ import (
 
 	"github.com/paddymorgan84/fpl/api"
 	"github.com/paddymorgan84/fpl/helpers"
+	"github.com/paddymorgan84/fpl/ui"
 )
 
 func TestBuildPointsCommand(t *testing.T) {
@@ -15,8 +16,10 @@ func TestBuildPointsCommand(t *testing.T) {
 
 	reader := helpers.NewMockConfigReader(ctrl)
 	fpl := api.NewMockFplAPI(ctrl)
+	teamsParser := helpers.NewMockTeamsParser(ctrl)
+	renderer := ui.NewMockRenderer(ctrl)
 
-	cmd := BuildPointsCommand(fpl, reader)
+	cmd := BuildPointsCommand(fpl, reader, teamsParser, renderer)
 
 	var expectedShort = "Get the points for a specified gameweek (defaults to latest active gameweek)"
 	if cmd.Short != expectedShort {

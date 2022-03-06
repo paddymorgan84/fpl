@@ -7,6 +7,7 @@ import (
 
 	"github.com/paddymorgan84/fpl/api"
 	"github.com/paddymorgan84/fpl/helpers"
+	"github.com/paddymorgan84/fpl/ui"
 )
 
 func TestBuildHistoryCommand(t *testing.T) {
@@ -15,8 +16,10 @@ func TestBuildHistoryCommand(t *testing.T) {
 
 	reader := helpers.NewMockConfigReader(ctrl)
 	fpl := api.NewMockFplAPI(ctrl)
+	teamParser := helpers.NewMockTeamsParser(ctrl)
+	renderer := ui.NewMockRenderer(ctrl)
 
-	cmd := BuildHistoryCommand(fpl, reader)
+	cmd := BuildHistoryCommand(fpl, reader, teamParser, renderer)
 
 	var expectedShort = "Returns history for a managers current and past seasons"
 	if cmd.Short != expectedShort {

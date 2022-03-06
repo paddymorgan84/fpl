@@ -7,6 +7,7 @@ import (
 
 	"github.com/paddymorgan84/fpl/api"
 	"github.com/paddymorgan84/fpl/helpers"
+	"github.com/paddymorgan84/fpl/ui"
 	"github.com/spf13/cobra"
 
 	homedir "github.com/mitchellh/go-homedir"
@@ -51,8 +52,10 @@ func BuildRootCommand() *cobra.Command {
 	cmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.fpl.yaml)")
 	cmd.PersistentFlags().StringP("gameweek", "g", "", "The gameweek you wish to see details for")
 	err := viper.BindPFlag("gameweek", cmd.PersistentFlags().Lookup("gameweek"))
-	var fplClient api.FplAPI = api.New()
+	var fplClient = api.New()
 	var configReader = helpers.ViperConfigReader{}
+	var teamsParser = new(helpers.FplTeamsParser)
+	var renderer = new(ui.TerminalRenderer)
 
 	if err != nil {
 		log.Fatal(err)
@@ -60,11 +63,11 @@ func BuildRootCommand() *cobra.Command {
 
 	// Add all the commands we want
 	cmd.AddCommand(
-		BuildDetailsCommand(fplClient, configReader),
-		BuildFixturesCommand(fplClient, configReader),
-		BuildHistoryCommand(fplClient, configReader),
-		BuildPointsCommand(fplClient, configReader),
-		BuildRivalsCommand(fplClient, configReader))
+		BuildDetailsCommand(fplClient, configReader, teamsParser, renderer),
+		BuildFixturesCommand(fplClient, configReader, teamsParser, renderer),
+		BuildHistoryCommand(fplClient, configReader, teamsParser, renderer),
+		BuildPointsCommand(fplClient, configReader, teamsParser, renderer),
+		BuildRivalsCommand(fplClient, configReader, renderer))
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.

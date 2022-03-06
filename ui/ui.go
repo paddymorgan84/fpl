@@ -14,8 +14,27 @@ import (
 	"golang.org/x/text/message"
 )
 
+// Renderer is an abstraction that allows me to implement multiple renderers whilst also allowing me to unit test
+type Renderer interface {
+	PrintHeader(title string)
+	PrintTeamPoints(bootstrap responses.BootstrapData, live responses.GameweekLiveScores, points responses.GameweekPoints)
+	PrintRivalPoints(bootstrap responses.BootstrapData, live responses.GameweekLiveScores, points responses.GameweekPoints, details responses.ManagerDetails)
+	PrintManagerDetails(details responses.ManagerDetails)
+	PrintClassicLeagues(details responses.ManagerDetails, teamsParser helpers.TeamsParser)
+	PrintGlobalLeagues(detailsResponse responses.ManagerDetails, teamsParser helpers.TeamsParser)
+	PrintTransfersAndFinance(detailsResponse responses.ManagerDetails, teamsParser helpers.TeamsParser)
+	PrintGameweekFixtures(bootstrap responses.BootstrapData, fixtures responses.GameweekFixtures, teamsParser helpers.TeamsParser, gameweek int)
+	PrintSeasonDetails(history responses.ManagerHistory, teamsParser helpers.TeamsParser)
+	PrintChipDetails(history responses.ManagerHistory)
+	PrintPreviousSeasonDetails(history responses.ManagerHistory)
+}
+
+// TerminalRenderer is my concrete implementation of the Renderer interface, outputting to the terminal
+type TerminalRenderer struct {
+}
+
 // PrintHeader will print standardised header, calculating the appropriate length from the titles characters
-func PrintHeader(title string) {
+func (t TerminalRenderer) PrintHeader(title string) {
 
 	var b bytes.Buffer
 
@@ -29,7 +48,7 @@ func PrintHeader(title string) {
 }
 
 // PrintTeamPoints prints the points the team has
-func PrintTeamPoints(bootstrap responses.BootstrapData, live responses.GameweekLiveScores, points responses.GameweekPoints) {
+func (t TerminalRenderer) PrintTeamPoints(bootstrap responses.BootstrapData, live responses.GameweekLiveScores, points responses.GameweekPoints) {
 	tr := ansiterm.NewTabWriter(os.Stdout, 0, 0, 1, ' ', tabwriter.FilterHTML)
 
 	for _, pick := range points.Picks {
@@ -46,7 +65,7 @@ func PrintTeamPoints(bootstrap responses.BootstrapData, live responses.GameweekL
 }
 
 // PrintRivalPoints prints out the details for the rivals given the teamID in details
-func PrintRivalPoints(bootstrap responses.BootstrapData, live responses.GameweekLiveScores, points responses.GameweekPoints, details responses.ManagerDetails) {
+func (t TerminalRenderer) PrintRivalPoints(bootstrap responses.BootstrapData, live responses.GameweekLiveScores, points responses.GameweekPoints, details responses.ManagerDetails) {
 	p := message.NewPrinter(language.English)
 	tr := ansiterm.NewTabWriter(os.Stdout, 0, 0, 1, ' ', tabwriter.FilterHTML)
 
@@ -76,7 +95,7 @@ func PrintRivalPoints(bootstrap responses.BootstrapData, live responses.Gameweek
 }
 
 // PrintManagerDetails prints the summary details for a manager
-func PrintManagerDetails(details responses.ManagerDetails) {
+func (t TerminalRenderer) PrintManagerDetails(details responses.ManagerDetails) {
 	p := message.NewPrinter(language.English)
 	tr := ansiterm.NewTabWriter(os.Stdout, 0, 0, 1, ' ', tabwriter.FilterHTML)
 
@@ -108,13 +127,13 @@ func PrintManagerDetails(details responses.ManagerDetails) {
 }
 
 // PrintClassicLeagues prints all classic leagues and the current rank for each
-func PrintClassicLeagues(details responses.ManagerDetails) {
+func (t TerminalRenderer) PrintClassicLeagues(details responses.ManagerDetails, teamsParser helpers.TeamsParser) {
 	p := message.NewPrinter(language.English)
 	tr := ansiterm.NewTabWriter(os.Stdout, 0, 0, 1, ' ', tabwriter.FilterHTML)
 
 	for _, league := range details.Leagues.Classic {
 		if league.LeagueType == "x" {
-			_, err := p.Fprintf(tr, "%s\t%d\t%s\n", league.Name, league.EntryRank, helpers.CalculateRankComparison(league))
+			_, err := p.Fprintf(tr, "%s\t%d\t%s\n", league.Name, league.EntryRank, teamsParser.CalculateRankComparison(league))
 
 			if err != nil {
 				log.Fatal(err)
@@ -126,13 +145,13 @@ func PrintClassicLeagues(details responses.ManagerDetails) {
 }
 
 // PrintGlobalLeagues prints all global leagues and the current rank for each
-func PrintGlobalLeagues(detailsResponse responses.ManagerDetails) {
+func (t TerminalRenderer) PrintGlobalLeagues(detailsResponse responses.ManagerDetails, teamsParser helpers.TeamsParser) {
 	p := message.NewPrinter(language.English)
 	tr := ansiterm.NewTabWriter(os.Stdout, 0, 0, 1, ' ', tabwriter.FilterHTML)
 
 	for _, league := range detailsResponse.Leagues.Classic {
 		if league.LeagueType == "s" {
-			_, err := p.Fprintf(tr, "%s\t%d\t%s\n", league.Name, league.EntryRank, helpers.CalculateRankComparison(league))
+			_, err := p.Fprintf(tr, "%s\t%d\t%s\n", league.Name, league.EntryRank, teamsParser.CalculateRankComparison(league))
 
 			if err != nil {
 				log.Fatal(err)
@@ -144,7 +163,7 @@ func PrintGlobalLeagues(detailsResponse responses.ManagerDetails) {
 }
 
 // PrintTransfersAndFinance prints details for a teamsd transfers, value and money in the bank
-func PrintTransfersAndFinance(detailsResponse responses.ManagerDetails) {
+func (t TerminalRenderer) PrintTransfersAndFinance(detailsResponse responses.ManagerDetails, teamsParser helpers.TeamsParser) {
 	p := message.NewPrinter(language.English)
 	tr := ansiterm.NewTabWriter(os.Stdout, 0, 0, 1, ' ', tabwriter.FilterHTML)
 
@@ -154,13 +173,13 @@ func PrintTransfersAndFinance(detailsResponse responses.ManagerDetails) {
 		log.Fatal(err)
 	}
 
-	_, err = p.Fprintf(tr, "%s\t£%.1f\n", "Squad value: ", helpers.CalculateMonetaryValue(detailsResponse.LastDeadlineValue))
+	_, err = p.Fprintf(tr, "%s\t£%.1f\n", "Squad value: ", teamsParser.CalculateMonetaryValue(detailsResponse.LastDeadlineValue))
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	_, err = p.Fprintf(tr, "%s\t£%.1f\n", "In the bank: ", helpers.CalculateMonetaryValue(detailsResponse.LastDeadlineBank))
+	_, err = p.Fprintf(tr, "%s\t£%.1f\n", "In the bank: ", teamsParser.CalculateMonetaryValue(detailsResponse.LastDeadlineBank))
 
 	if err != nil {
 		log.Fatal(err)
@@ -170,12 +189,12 @@ func PrintTransfersAndFinance(detailsResponse responses.ManagerDetails) {
 }
 
 // PrintGameweekFixtures prints the fixtures for the specified gameweek
-func PrintGameweekFixtures(bootstrap responses.BootstrapData, fixtures responses.GameweekFixtures, gameweek int) {
+func (t TerminalRenderer) PrintGameweekFixtures(bootstrap responses.BootstrapData, fixtures responses.GameweekFixtures, teamsParser helpers.TeamsParser, gameweek int) {
 	tr := ansiterm.NewTabWriter(os.Stdout, 0, 0, 1, ' ', tabwriter.FilterHTML)
 	for _, fixture := range fixtures {
 		if fixture.Event == gameweek {
-			var homeTeam = helpers.GetTeam(fixture.HomeTeam, bootstrap)
-			var awayTeam = helpers.GetTeam(fixture.AwayTeam, bootstrap)
+			var homeTeam = teamsParser.GetTeam(fixture.HomeTeam, bootstrap)
+			var awayTeam = teamsParser.GetTeam(fixture.AwayTeam, bootstrap)
 
 			if fixture.Started {
 				var homeScore = fixture.HomeTeamScore
@@ -192,7 +211,7 @@ func PrintGameweekFixtures(bootstrap responses.BootstrapData, fixtures responses
 }
 
 // PrintSeasonDetails prints a teams current season details for each gameweek
-func PrintSeasonDetails(history responses.ManagerHistory) {
+func (t TerminalRenderer) PrintSeasonDetails(history responses.ManagerHistory, teamsParser helpers.TeamsParser) {
 	p := message.NewPrinter(language.English)
 	tr := ansiterm.NewTabWriter(os.Stdout, 0, 0, 1, ' ', tabwriter.FilterHTML)
 
@@ -217,7 +236,7 @@ func PrintSeasonDetails(history responses.ManagerHistory) {
 			gameweek.EventTransfersCost,
 			gameweek.TotalPoints,
 			gameweek.OverallRank,
-			helpers.CalculateMonetaryValue(gameweek.Value))
+			teamsParser.CalculateMonetaryValue(gameweek.Value))
 
 		if err != nil {
 			log.Fatal(err)
@@ -228,7 +247,7 @@ func PrintSeasonDetails(history responses.ManagerHistory) {
 }
 
 // PrintChipDetails prints details around what chips have been used
-func PrintChipDetails(history responses.ManagerHistory) {
+func (t TerminalRenderer) PrintChipDetails(history responses.ManagerHistory) {
 	p := message.NewPrinter(language.English)
 	tr := ansiterm.NewTabWriter(os.Stdout, 0, 0, 1, ' ', tabwriter.FilterHTML)
 
@@ -246,7 +265,7 @@ func PrintChipDetails(history responses.ManagerHistory) {
 }
 
 // PrintPreviousSeasonDetails prints a teams record from past seasons
-func PrintPreviousSeasonDetails(history responses.ManagerHistory) {
+func (t TerminalRenderer) PrintPreviousSeasonDetails(history responses.ManagerHistory) {
 	p := message.NewPrinter(language.English)
 	tr := ansiterm.NewTabWriter(os.Stdout, 0, 0, 1, ' ', tabwriter.FilterHTML)
 
@@ -262,3 +281,5 @@ func PrintPreviousSeasonDetails(history responses.ManagerHistory) {
 
 	helpers.AutoFlush(tr)
 }
+
+//go:generate mockgen -source=ui.go -package=ui -destination=mock_renderer.go

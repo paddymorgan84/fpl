@@ -15,12 +15,12 @@ type HistoryArgs struct {
 var historyArgs HistoryArgs
 
 // BuildHistoryCommand returns the history cobra command
-func BuildHistoryCommand(c api.FplAPI, config helpers.ConfigReader) *cobra.Command {
+func BuildHistoryCommand(c api.FplAPI, config helpers.ConfigReader, teamParser helpers.TeamsParser, renderer ui.Renderer) *cobra.Command {
 	var cmd = &cobra.Command{
 		Use:   "history",
 		Short: "Returns history for a managers current and past seasons",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return getHistory(c, config)
+			return getHistory(c, config, teamParser, renderer)
 		},
 	}
 
@@ -31,8 +31,8 @@ func BuildHistoryCommand(c api.FplAPI, config helpers.ConfigReader) *cobra.Comma
 	return cmd
 }
 
-func getHistory(c api.FplAPI, config helpers.ConfigReader) error {
-	teamID, err := helpers.GetTeamID(historyArgs.TeamID, config)
+func getHistory(c api.FplAPI, config helpers.ConfigReader, teamParser helpers.TeamsParser, renderer ui.Renderer) error {
+	teamID, err := teamParser.GetTeamID(historyArgs.TeamID, config)
 
 	if err != nil {
 		return err
@@ -44,14 +44,14 @@ func getHistory(c api.FplAPI, config helpers.ConfigReader) error {
 		return err
 	}
 
-	ui.PrintHeader("This season")
-	ui.PrintSeasonDetails(historyResponse)
+	renderer.PrintHeader("This season")
+	renderer.PrintSeasonDetails(historyResponse, teamParser)
 
-	ui.PrintHeader("Chips")
-	ui.PrintChipDetails(historyResponse)
+	renderer.PrintHeader("Chips")
+	renderer.PrintChipDetails(historyResponse)
 
-	ui.PrintHeader("Previous Seasons")
-	ui.PrintPreviousSeasonDetails(historyResponse)
+	renderer.PrintHeader("Previous Seasons")
+	renderer.PrintPreviousSeasonDetails(historyResponse)
 
 	return err
 }

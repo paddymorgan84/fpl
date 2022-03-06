@@ -7,6 +7,7 @@ import (
 
 	"github.com/paddymorgan84/fpl/api"
 	"github.com/paddymorgan84/fpl/helpers"
+	"github.com/paddymorgan84/fpl/ui"
 )
 
 func TestBuildRivalsCommand(t *testing.T) {
@@ -15,8 +16,9 @@ func TestBuildRivalsCommand(t *testing.T) {
 
 	reader := helpers.NewMockConfigReader(ctrl)
 	fpl := api.NewMockFplAPI(ctrl)
+	renderer := ui.NewMockRenderer(ctrl)
 
-	cmd := BuildRivalsCommand(fpl, reader)
+	cmd := BuildRivalsCommand(fpl, reader, renderer)
 
 	var expectedShort = "Show the points for all of your rivals (specified in config) for a specified gameweek"
 	if cmd.Short != expectedShort {
