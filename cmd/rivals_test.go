@@ -16,9 +16,10 @@ func TestBuildRivalsCommand(t *testing.T) {
 
 	reader := helpers.NewMockConfigReader(ctrl)
 	fpl := api.NewMockFplAPI(ctrl)
+	gameweekParser := helpers.NewMockGameweekParser(ctrl)
 	renderer := ui.NewMockRenderer(ctrl)
 
-	cmd := BuildRivalsCommand(fpl, reader, renderer)
+	cmd := BuildRivalsCommand(fpl, reader, gameweekParser, renderer)
 
 	var expectedShort = "Show the points for all of your rivals (specified in config) for a specified gameweek"
 	if cmd.Short != expectedShort {

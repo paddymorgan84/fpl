@@ -55,6 +55,7 @@ func BuildRootCommand() *cobra.Command {
 	var fplClient = api.New()
 	var configReader = helpers.ViperConfigReader{}
 	var teamsParser = new(helpers.FplTeamsParser)
+	var gameweekParser = new(helpers.FplGameweekParser)
 	var renderer = new(ui.TerminalRenderer)
 
 	if err != nil {
@@ -64,10 +65,10 @@ func BuildRootCommand() *cobra.Command {
 	// Add all the commands we want
 	cmd.AddCommand(
 		BuildDetailsCommand(fplClient, configReader, teamsParser, renderer),
-		BuildFixturesCommand(fplClient, configReader, teamsParser, renderer),
+		BuildFixturesCommand(fplClient, configReader, teamsParser, gameweekParser, renderer),
 		BuildHistoryCommand(fplClient, configReader, teamsParser, renderer),
-		BuildPointsCommand(fplClient, configReader, teamsParser, renderer),
-		BuildRivalsCommand(fplClient, configReader, renderer))
+		BuildPointsCommand(fplClient, configReader, teamsParser, gameweekParser, renderer),
+		BuildRivalsCommand(fplClient, configReader, gameweekParser, renderer))
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.

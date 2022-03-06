@@ -17,9 +17,10 @@ func TestBuildPointsCommand(t *testing.T) {
 	reader := helpers.NewMockConfigReader(ctrl)
 	fpl := api.NewMockFplAPI(ctrl)
 	teamsParser := helpers.NewMockTeamsParser(ctrl)
+	gameweekParser := helpers.NewMockGameweekParser(ctrl)
 	renderer := ui.NewMockRenderer(ctrl)
 
-	cmd := BuildPointsCommand(fpl, reader, teamsParser, renderer)
+	cmd := BuildPointsCommand(fpl, reader, teamsParser, gameweekParser, renderer)
 
 	var expectedShort = "Get the points for a specified gameweek (defaults to latest active gameweek)"
 	if cmd.Short != expectedShort {

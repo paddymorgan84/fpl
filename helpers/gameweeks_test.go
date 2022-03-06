@@ -137,7 +137,9 @@ func TestGetCurrentGameweek(t *testing.T) {
 
 		reader.EXPECT().GetString("gameweek").Return(table.configReaderValue).AnyTimes()
 
-		actualResult, err := GetCurrentGameweek(table.gameweeks, reader)
+		parser := new(FplGameweekParser)
+
+		actualResult, err := parser.GetCurrentGameweek(table.gameweeks, reader)
 
 		if err != nil && !table.expectedError {
 			t.Fatalf("unexpected error: %v", err)
