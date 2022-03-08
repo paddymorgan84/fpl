@@ -27,6 +27,7 @@ type Renderer interface {
 	PrintSeasonDetails(history responses.ManagerHistory, teamsParser helpers.TeamsParser)
 	PrintChipDetails(history responses.ManagerHistory)
 	PrintPreviousSeasonDetails(history responses.ManagerHistory)
+	PrintNoRivalsWarning()
 }
 
 // TerminalRenderer is my concrete implementation of the Renderer interface, outputting to the terminal
@@ -280,6 +281,11 @@ func (t TerminalRenderer) PrintPreviousSeasonDetails(history responses.ManagerHi
 	}
 
 	helpers.AutoFlush(tr)
+}
+
+// PrintNoRivalsWarning prints a warning when no rivals have been specified in the config
+func (t TerminalRenderer) PrintNoRivalsWarning() {
+	fmt.Println("No rivals specified. Update config for this to work.")
 }
 
 //go:generate mockgen -source=ui.go -package=ui -destination=mock_renderer.go

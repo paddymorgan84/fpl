@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"fmt"
+	"errors"
 	"strconv"
 
 	"github.com/paddymorgan84/fpl/api"
@@ -24,10 +24,10 @@ func BuildRivalsCommand(c api.FplAPI, config helpers.ConfigReader, gameweekParse
 }
 
 func getRivals(c api.FplAPI, config helpers.ConfigReader, gameweekParser helpers.GameweekParser, renderer ui.Renderer) error {
-	renderer.PrintHeader("Rivals")
-
 	if !config.IsSet("rivals") {
-		fmt.Println("No rivals specified. Update config for this to work.")
+		renderer.PrintHeader("Rivals")
+		renderer.PrintNoRivalsWarning()
+		return nil
 	}
 
 	bootstrap, err := c.GetBootstrapData()
@@ -48,11 +48,12 @@ func getRivals(c api.FplAPI, config helpers.ConfigReader, gameweekParser helpers
 		return err
 	}
 
+	renderer.PrintHeader("Rivals")
 	for _, rival := range config.GetStringSlice("rivals") {
 		teamID, err := strconv.Atoi(rival)
 
 		if err != nil {
-			return err
+			return errors.New("rivals must all be numeric ids")
 		}
 
 		points, err := c.GetGameweekPoints(teamID, gameweek)
