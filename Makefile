@@ -45,7 +45,7 @@ install-npm: ## Install the local node dependencies
 .PHONY: install-go
 install-go: ## Install the local go dependencies
 	@echo "📡 Installing local go dependencies..."
-	go install github.com/securego/gosec/cmd/gosec@master
+	go install github.com/securego/gosec/v2/cmd/gosec@master
 	go install golang.org/x/lint/golint@master
 	go install github.com/golang/mock/mockgen@master
 	go get ./...
