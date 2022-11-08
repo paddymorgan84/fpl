@@ -10,7 +10,7 @@
     "markdownlint-cli": "^0.32.2"
   },
   "devDependencies": {
-    "husky": "^8.0.1",
+    "husky": "^8.0.2",
     "lint-staged": "^13.0.3"
   },
   "scripts": {
