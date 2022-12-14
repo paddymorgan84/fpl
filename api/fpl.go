@@ -112,8 +112,13 @@ func request(method string, endpoint string, response interface{}, client http.C
 		return err
 	}
 
-	defer resp.Body.Close()
 	body, err := io.ReadAll(resp.Body)
+
+	if err != nil {
+		return err
+	}
+
+	err = resp.Body.Close()
 
 	if err != nil {
 		return err
