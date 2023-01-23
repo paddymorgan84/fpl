@@ -62,7 +62,7 @@ Use "fpl [command] --help" for more information about a command.
 
 ## Pre-requisites
 
-- [Go version 1.16 or higher](https://golang.org/dl/)
+- [Go version 1.18 or higher](https://golang.org/dl/)
 
 ## Installation
 
