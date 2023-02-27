@@ -4,7 +4,7 @@ go 1.18
 
 require (
 	github.com/golang/mock v1.6.0
-	github.com/juju/ansiterm v0.0.0-20180109212912-720a0952cc2a
+	github.com/juju/ansiterm v1.0.0
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/spf13/cobra v1.6.1
 	github.com/spf13/viper v1.15.0
